@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Наши звёздочки ⭐</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Handgeschrieben:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    :root{--sveta:#ec4899;--sveta-light:#fce7f3;--valera:#3b82f6;--valera-light:#dbeafe;--bg:#f8fafc;--card:#fff;--purple:#4c1d95;--green:#10b981;--green-dark:#059669}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Handgeschrieben',cursive;background:var(--bg);color:#1f2937;transition:background .5s}
+    .header{text-align:center;padding:1.5rem 1rem .5rem;position:relative}
+    .header h1{font-size:2rem;color:var(--purple);letter-spacing:1px}
+    .tabs{display:flex;justify-content:center;gap:.8rem;margin:1.5rem auto;flex-wrap:wrap}
+    .tab-btn{border:none;padding:.8rem 2rem;border-radius:50px;font-size:1.1rem;font-weight:bold;cursor:pointer;transition:.3s;text-shadow:0 1px 1px rgba(255,255,255,.7);font-family:inherit}
+    .tab-sveta{background:var(--sveta-light);color:var(--sveta)} .tab-sveta.active{background:var(--sveta);color:#fff}
+    .tab-valera{background:var(--valera-light);color:var(--valera)} .tab-valera.active{background:var(--valera);color:#fff}
+    .tab-shop{background:#ede9fe;color:var(--purple)} .tab-shop.active{background:var(--purple);color:#fff}
+    .tab-badges{background:#fef3c7;color:#b45309} .tab-badges.active{background:#b45309;color:#fff}
+    .tab-report{background:#d1fae5;color:#065f46} .tab-report.active{background:#065f46;color:#fff}
+    .tab-content{display:none;max-width:800px;margin:0 auto;padding:0 1rem 3rem} .tab-content.active{display:block}
+
+    .star-card{background:linear-gradient(135deg,#ede9fe,#c4b5fd);border-radius:1.5rem;padding:2rem;margin-bottom:1rem;box-shadow:0 4px 15px rgba(76,29,149,.15);text-align:center}
+    .kid-name{font-size:1.8rem;margin-bottom:.3rem} .kid-name.sveta{color:var(--sveta)} .kid-name.valera{color:var(--valera)}
+    .star-jar{font-size:3rem;margin:.3rem 0}
+    .star-count-big{font-size:3.5rem;font-weight:bold;color:var(--purple);line-height:1.2}
+    .star-label{font-size:1.1rem;color:#6b7280}
+    .star-details{font-size:.9rem;color:#7c3aed;margin-top:.5rem;opacity:.7}
+    .star-can-buy{font-size:1rem;margin-top:.5rem;font-weight:bold;min-height:1.5rem}
+    .shop-hint{margin-top:.8rem;font-size:.95rem;color:var(--purple);font-weight:bold}
+
+    .level-section{background:linear-gradient(135deg,#e0e7ff,#c7d2fe);border-radius:1rem;padding:.8rem 1.2rem;margin-bottom:1rem;text-align:center}
+    .level-row{display:flex;justify-content:center;align-items:baseline;gap:.5rem}
+    .level-num{font-size:1.8rem;font-weight:bold;color:var(--purple)}
+    .level-role{font-size:1rem;color:#5b21b6;font-style:italic}
+    .xp-bar-container{width:100%;height:10px;background:#ddd6fe;border-radius:5px;overflow:hidden;margin-top:.5rem}
+    .xp-fill{height:100%;background:linear-gradient(90deg,#8b5cf6,#6366f1);border-radius:5px;transition:width .5s}
+    .xp-text{font-size:.8rem;color:#5b21b6;margin-top:.3rem}
+
+    .double-notice{border-radius:1rem;padding:.8rem 1.2rem;margin-bottom:1rem;text-align:center;font-weight:bold;font-size:1rem;animation:pulse 2s infinite}
+    .double-notice.warning{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border:2px solid #f59e0b}
+    .double-notice.active{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#991b1b;border:2px solid #ef4444;font-size:1.1rem}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+
+    .piggy-card{background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:1.5rem;padding:1.5rem 2rem;margin-bottom:2rem;box-shadow:0 4px 15px rgba(251,191,36,.2);text-align:center}
+    .piggy-title{font-size:1.1rem;color:#92400e;margin-bottom:.3rem}
+    .piggy-amount{font-size:2.5rem;font-weight:bold;color:#78350f}
+    .piggy-sub{font-size:.85rem;color:#b45309;margin-top:.3rem}
+
+    .view-toggle{display:flex;gap:.5rem;margin-bottom:1.5rem;justify-content:center}
+    .view-btn{border:1px solid #d1d5db;background:#fff;padding:.6rem 1.5rem;border-radius:50px;font-size:1rem;cursor:pointer;font-family:inherit;transition:.2s}
+    .view-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+
+    .today-date{text-align:center;font-size:1.1rem;color:#6b7280;margin-bottom:1.5rem;padding:.8rem;background:#fff;border-radius:1rem;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+    .today-date .day-stars{font-weight:bold;color:var(--purple)}
+
+    .category{margin-bottom:2rem}
+    .category-title{font-size:1.3rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+    .task-list{display:grid;gap:.8rem}
+    .task-item{background:var(--card);border-radius:1rem;padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:transform .2s}
+    .task-item:hover{transform:translateY(-2px)}
+    .task-item.done .task-label{color:#9ca3af}
+    .task-left{display:flex;align-items:center;gap:.8rem;flex:1}
+    .task-label{font-size:1.05rem}
+    .task-label small{font-size:.75rem;color:#9ca3af}
+    .task-points{font-size:.85rem;font-weight:bold;padding:.25rem .7rem;border-radius:50px;white-space:nowrap}
+    .task-points.sveta{background:var(--sveta-light);color:var(--sveta)}
+    .task-points.valera{background:var(--valera-light);color:var(--valera)}
+    .task-points.neg{background:#fee2e2!important;color:#ef4444!important}
+
+    .task-checkbox{width:38px;height:38px;border-radius:50%;border:2px solid #d1d5db;background:#fff;cursor:pointer;font-size:1.2rem;flex-shrink:0;margin-left:1rem;display:flex;align-items:center;justify-content:center;transition:.2s;font-family:inherit}
+    .task-checkbox:hover{border-color:#9ca3af}
+    .task-checkbox.checked{background:var(--green);border-color:var(--green);color:#fff}
+    .task-checkbox.locked{cursor:not-allowed;opacity:.7}
+
+    .counter{display:flex;align-items:center;gap:.5rem;flex-shrink:0;margin-left:1rem}
+    .counter-btn{width:36px;height:36px;border-radius:50%;border:none;font-size:1.3rem;font-weight:bold;cursor:pointer;font-family:inherit;transition:.15s;display:flex;align-items:center;justify-content:center}
+    .counter-btn.minus{background:#fee2e2;color:#ef4444} .counter-btn.minus:hover{background:#fecaca}
+    .counter-btn.plus{background:#d1fae5;color:#059669} .counter-btn.plus:hover{background:#a7f3d0}
+    .counter-btn:disabled{opacity:.3;cursor:not-allowed}
+    .counter-val{min-width:36px;text-align:center;font-size:1.2rem;font-weight:bold}
+
+    .cal-nav{display:flex;justify-content:center;align-items:center;gap:1rem;margin-bottom:1rem}
+    .cal-nav button{padding:.4rem .8rem;border:1px solid #d1d5db;background:#fff;border-radius:8px;cursor:pointer;font-size:1rem;font-family:inherit}
+    .cal-nav span{font-size:1.1rem;font-weight:bold;color:var(--purple);min-width:180px;text-align:center}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+    .cal-day-name{text-align:center;font-size:.8rem;color:#9ca3af;padding:.3rem;font-weight:bold}
+    .cal-cell{aspect-ratio:1;border-radius:8px;padding:.3rem;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f3f4f6;min-height:55px}
+    .cal-cell.empty{background:transparent} .cal-cell.today{background:#ede9fe;border:2px solid #8b5cf6}
+    .cal-cell.future{opacity:.3} .cal-cell.missed{background:#fef2f2} .cal-cell.earned{background:#d1fae5}
+    .cal-cell.double{background:#fef3c7!important;border:2px solid #f59e0b}
+    .cal-date{font-size:.9rem;font-weight:bold} .cal-stars{font-size:.7rem;margin-top:.15rem;white-space:nowrap}
+
+    .challenge-card{background:var(--card);border-radius:1rem;padding:1rem 1.2rem;margin-bottom:.8rem;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:4px solid #8b5cf6;transition:transform .2s}
+    .challenge-card:hover{transform:translateY(-2px)}
+    .challenge-card.accepted{border-left-color:var(--green);background:#f0fdf4}
+    .challenge-card.completed{border-left-color:#10b981;background:#d1fae5;opacity:.85}
+    .ch-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem}
+    .ch-name{font-weight:bold;font-size:1.05rem}
+    .ch-goal{font-size:.9rem;color:#6b7280;margin-bottom:.5rem}
+    .ch-reward{font-size:.85rem;color:#8b5cf6;font-weight:bold}
+    .ch-steps{display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem}
+    .ch-step{display:flex;align-items:center;gap:.5rem;font-size:.95rem}
+    .ch-step input{accent-color:var(--green);width:20px;height:20px;cursor:pointer}
+    .ch-accept-btn{padding:.4rem 1.2rem;background:#8b5cf6;color:#fff;border:none;border-radius:50px;cursor:pointer;font-family:inherit;font-size:.9rem;font-weight:bold;margin-top:.3rem}
+    .ch-accept-btn:hover{filter:brightness(1.1)}
+
+    .family-card{background:linear-gradient(135deg,#fff1f2,#fce7f3);border-radius:1rem;padding:1.2rem;margin-bottom:1.5rem;box-shadow:0 2px 8px rgba(236,72,153,.1);border:2px solid #f9a8d4}
+    .fam-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;font-size:1.15rem;font-weight:bold;color:#be185d}
+    .fam-title{font-size:1rem;font-weight:bold;color:#9d174d;margin-bottom:.3rem}
+    .fam-desc{font-size:.9rem;color:#6b7280;margin-bottom:.8rem;line-height:1.5}
+    .fam-steps{display:flex;flex-direction:column;gap:.4rem}
+    .fam-step{display:flex;align-items:center;gap:.5rem;font-size:.95rem}
+    .fam-step input{accent-color:#ec4899;width:20px;height:20px;cursor:pointer}
+    .fam-footer{display:flex;justify-content:space-between;align-items:center;margin-top:.5rem}
+    .fam-reward{font-size:.85rem;color:#ec4899;font-weight:bold}
+    .fam-status{font-size:.85rem}
+    .fam-status.done{color:#10b981;font-weight:bold}
+    .fam-status.progress{color:#9ca3af}
+
+    .seasonal-block{border-radius:1rem;padding:1.2rem;margin-bottom:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .seasonal-block.autumn{background:linear-gradient(135deg,#fef3c7,#fed7aa);border:2px solid #f97316}
+    .seasonal-block.winter{background:linear-gradient(135deg,#dbeafe,#bfdbfe);border:2px solid #3b82f6}
+    .seasonal-block.spring{background:linear-gradient(135deg,#d1fae5,#fef9c3);border:2px solid #10b981}
+    .seasonal-title{font-size:1.2rem;font-weight:bold;margin-bottom:.8rem;text-align:center}
+    .seasonal-task{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;font-size:.95rem}
+    .seasonal-task input{accent-color:#f97316;width:20px;height:20px;cursor:pointer}
+    .seasonal-pts{margin-left:auto;font-weight:bold;font-size:.85rem;color:#b45309}
+    .seasonal-block.winter .seasonal-pts{color:#1e40af}
+    .seasonal-block.spring .seasonal-pts{color:#065f46}
+
+    .team-bonus{text-align:center;padding:.8rem;border-radius:1rem;margin-bottom:1rem;font-size:.95rem}
+    .team-bonus.active{background:#d1fae5;color:#059669;font-weight:bold}
+    .team-bonus.inactive{background:#f3f4f6;color:#9ca3af}
+
+    .badge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.8rem;margin-bottom:1.5rem}
+    .badge-item{background:#fff;border-radius:1rem;padding:1rem .5rem;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+    .badge-item.locked{filter:grayscale(100%);opacity:.45}
+    .badge-icon{font-size:2rem}
+    .badge-name{font-size:.8rem;margin-top:.3rem}
+    .badge-section-header{font-size:1.3rem;margin-bottom:.8rem;margin-top:1.5rem;font-weight:bold}
+    .badge-section-header.sveta{color:var(--sveta)} .badge-section-header.valera{color:var(--valera)}
+
+    .report-card{background:#fff;border-radius:1.5rem;padding:1.5rem;margin-bottom:1rem;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+    .report-stat{display:inline-block;text-align:center;margin-right:1.5rem}
+    .report-stat-val{font-size:2rem;font-weight:bold;color:var(--purple)}
+    .report-stat-label{font-size:.85rem;color:#6b7280}
+    .report-text{margin-top:1rem;font-size:1rem;line-height:1.6;color:#374151}
+
+    .shop-balance-card{background:var(--card);border-radius:1.5rem;padding:2rem;margin-bottom:1.5rem;box-shadow:0 4px 15px rgba(0,0,0,.08);text-align:center}
+    .shop-balance-card h2{color:var(--purple);margin-bottom:1rem;font-size:1.6rem}
+    .shop-bal-row{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:.8rem}
+    .shop-bal-item{font-size:1.1rem} .shop-bal-item.sveta{color:var(--sveta)} .shop-bal-item.valera{color:var(--valera)}
+    .shop-bal-total{font-size:1.3rem;font-weight:bold;color:var(--purple);padding-top:.5rem;border-top:1px solid #e5e7eb}
+    .shop-subtabs{display:flex;gap:.5rem;margin-bottom:1.5rem;justify-content:center}
+    .shop-subtab{border:1px solid #d1d5db;background:#fff;padding:.7rem 1.8rem;border-radius:50px;font-size:1.05rem;cursor:pointer;font-family:inherit;transition:.2s;font-weight:bold}
+    .shop-subtab.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+    .prize-card{background:var(--card);border-radius:1.2rem;padding:1.2rem 1.5rem;margin-bottom:.8rem;display:flex;align-items:center;gap:1rem;box-shadow:0 2px 10px rgba(0,0,0,.06);transition:transform .2s,box-shadow .2s;cursor:pointer}
+    .prize-card:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(0,0,0,.12)}
+    .prize-card.disabled{opacity:.45;cursor:not-allowed}
+    .prize-card.disabled:hover{transform:none;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+    .prize-card.target{border:2px solid #f59e0b;background:#fffbeb}
+    .prize-icon{font-size:2.5rem;flex-shrink:0}
+    .prize-info{flex:1}
+    .prize-name{font-size:1.15rem;font-weight:bold}
+    .prize-cost{font-size:1rem;color:#6b7280;margin-top:.2rem}
+    .prize-split{font-size:.85rem;margin-top:.3rem;color:#9ca3af}
+    .prize-split .s{color:var(--sveta)} .prize-split .v{color:var(--valera)}
+    .prize-buy-btn{padding:.7rem 1.5rem;border:none;border-radius:50px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;background:var(--green);color:#fff;flex-shrink:0;transition:.2s}
+    .prize-buy-btn:hover{filter:brightness(1.1)}
+    .prize-buy-btn:disabled{background:#d1d5db;color:#9ca3af;cursor:not-allowed}
+    .prize-not-enough{font-size:.85rem;color:#ef4444;flex-shrink:0;font-weight:bold}
+    .prize-target-btn{padding:.3rem .8rem;border:1px solid #f59e0b;background:#fffbeb;color:#b45309;border-radius:50px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:bold;margin-top:.3rem}
+    .prize-target-btn:hover{background:#fef3c7}
+    .target-bar-bg{width:100%;height:14px;background:#fde68a;border-radius:7px;overflow:hidden;margin-top:.4rem}
+    .target-bar-fill{height:100%;background:linear-gradient(90deg,#f59e0b,#f97316);border-radius:7px;transition:width .5s}
+    .target-bar-text{font-size:.8rem;color:#92400e;margin-top:.2rem}
+
+    .indiv-section{margin-bottom:2rem}
+    .indiv-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding:.8rem 1.2rem;border-radius:1rem}
+    .indiv-header.sveta{background:var(--sveta-light)} .indiv-header.valera{background:var(--valera-light)}
+    .indiv-header .name{font-size:1.3rem;font-weight:bold}
+    .indiv-header.sveta .name{color:var(--sveta)} .indiv-header.valera .name{color:var(--valera)}
+    .indiv-header .bal{font-size:1.1rem;font-weight:bold}
+    .indiv-piggy{font-size:.9rem;color:#92400e}
+
+    .purch-log-title{font-size:1.2rem;color:var(--purple);margin:2rem 0 1rem}
+    .purch-log-item{background:#fff;padding:.8rem 1.2rem;border-left:4px solid var(--purple);margin-bottom:.5rem;border-radius:0 8px 8px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+    .purch-log-item.common{border-left-color:var(--purple)} .purch-log-item.sveta{border-left-color:var(--sveta)} .purch-log-item.valera{border-left-color:var(--valera)}
+    .purch-log-date{font-size:.85rem;color:#9ca3af} .purch-log-prize{font-weight:bold} .purch-log-details{font-size:.9rem;color:#6b7280}
+
+    .reward-overlay,.purchase-overlay,.parent-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center}
+    .reward-overlay.show,.purchase-overlay.show,.parent-modal.show{display:flex}
+    .reward-box,.purchase-box,.parent-box{background:#fff;border-radius:2rem;padding:2.5rem 2rem;text-align:center;animation:bounceIn .5s ease;max-width:400px;margin:1rem;position:relative}
+    .reward-box .big-star,.purchase-box .big-icon{font-size:4rem;display:block;margin-bottom:1rem}
+    .reward-box h2,.purchase-box h3,.parent-box h2{font-size:1.4rem;margin-bottom:1rem;color:var(--purple)}
+    .reward-box p,.purchase-box .purch-details{color:#6b7280;margin-bottom:1.5rem;line-height:1.6}
+    .purchase-box .purch-split{margin:.8rem 0;padding:.8rem;background:#f9fafb;border-radius:.8rem}
+    .purchase-box .purch-split div{margin:.3rem 0}
+    .purchase-box .purch-split .s{color:var(--sveta);font-weight:bold} .purchase-box .purch-split .v{color:var(--valera);font-weight:bold}
+    .purchase-buttons{display:flex;gap:1rem;justify-content:center}
+    .purchase-buttons button{padding:.8rem 2rem;border:none;border-radius:50px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit}
+    .purch-btn-cancel{background:#e5e7eb;color:#4b5563} .purch-btn-cancel:hover{background:#d1d5db}
+    .purch-btn-confirm{background:var(--green);color:#fff} .purch-btn-confirm:hover{filter:brightness(1.1)}
+    .reward-box button{padding:.8rem 2rem;border:none;border-radius:50px;font-size:1rem;font-weight:bold;cursor:pointer;background:var(--purple);color:#fff;font-family:inherit}
+    .parent-btn-row{display:block;width:100%;padding:.8rem;border:none;border-radius:50px;font-family:inherit;font-weight:bold;cursor:pointer;margin-bottom:.5rem;font-size:1rem}
+    .parent-box .close{position:absolute;top:1rem;right:1.5rem;font-size:1.5rem;cursor:pointer;color:#9ca3af}
+    @keyframes bounceIn{0%{transform:scale(.3);opacity:0}50%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+
+    .parent-btn{position:fixed;top:1rem;right:1rem;width:50px;height:50px;border-radius:50%;background:var(--purple);color:#fff;border:none;cursor:pointer;font-size:1.3rem;z-index:100;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(76,29,149,.3)}
+    .parent-btn:hover{filter:brightness(1.1)}
+    .reset-btn{display:block;margin:2rem auto 0;padding:.6rem 1.5rem;background:#fee2e2;color:#ef4444;border:none;border-radius:50px;font-size:.9rem;cursor:pointer;font-family:inherit}
+    .reset-btn:hover{background:#fecaca}
+
+    .decor-element{position:fixed;pointer-events:none;z-index:-1;font-size:1.5rem;animation:fall 10s linear infinite}
+    @keyframes fall{0%{transform:translateY(-10vh) rotate(0deg);opacity:.8}100%{transform:translateY(110vh) rotate(360deg);opacity:.3}}
+
+    .reminder-banner{position:fixed;top:1rem;left:50%;transform:translateX(-50%);background:#f59e0b;color:#fff;padding:.8rem 1.5rem;border-radius:99px;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:3000;font-family:inherit;font-weight:bold;pointer-events:none;opacity:0;transition:opacity .3s,top .3s;display:flex;align-items:center;gap:.5rem}
+    .reminder-banner.show{opacity:1;top:calc(1rem + 20px)}
+    .reminder-close{cursor:pointer;margin-left:.75rem;font-size:1.2rem;pointer-events:auto}
+
+    @media(max-width:600px){
+      .header h1{font-size:1.5rem} .kid-name{font-size:1.4rem}
+      .star-card,.shop-balance-card{padding:1.5rem} .star-count-big{font-size:2.5rem}
+      .piggy-card{padding:1.2rem 1.5rem} .piggy-amount{font-size:2rem}
+      .tab-btn{padding:.6rem 1.5rem;font-size:1rem}
+      .cal-cell{min-height:45px} .cal-date{font-size:.75rem} .cal-stars{font-size:.6rem}
+      .task-label{font-size:.95rem} .prize-card{padding:1rem;gap:.7rem}
+      .prize-icon{font-size:2rem} .prize-buy-btn{padding:.5rem 1rem;font-size:.9rem}
+      .shop-bal-row{gap:1rem}
+    }
+  </style>
+</head>
+<body>
+  <button class="parent-btn" onclick="document.getElementById('parent-modal').classList.add('show')">🔒</button>
+  <div class="header"><h1>⭐ Наши звёздочки ⭐</h1></div>
+  <div class="tabs">
+    <button class="tab-btn tab-sveta active" onclick="switchTab('sveta')">🌸 Света</button>
+    <button class="tab-btn tab-valera" onclick="switchTab('valera')">🚀 Валера</button>
+    <button class="tab-btn tab-shop" onclick="switchTab('shop')">🛒 Магазин</button>
+    <button class="tab-btn tab-badges" onclick="switchTab('badges')">🏆 Бейджи</button>
+    <button class="tab-btn tab-report" onclick="switchTab('report')">📊 Отчёт</button>
+  </div>
+
+  <!-- СВЕТА -->
+  <div class="tab-content active" id="content-sveta">
+    <div class="star-card">
+      <div class="kid-name sveta">🌸 Света</div>
+      <div class="star-jar">⭐</div>
+      <div class="star-count-big" id="sveta-balance">0</div>
+      <div class="star-label">звёздочек накоплено</div>
+      <div class="star-details" id="sveta-details">Заработано: 0 · Потрачено: 0</div>
+      <div class="star-can-buy" id="sveta-can-buy"></div>
+      <div class="shop-hint">🛒 Зайди в магазин, чтобы обменять звёздочки на призы!</div>
+    </div>
+    <div class="level-section" id="sveta-level-section"></div>
+    <div class="piggy-card">
+      <div class="piggy-title">🐖 Копилка Светы</div>
+      <div class="piggy-amount"><span id="sveta-piggy">0</span> ₽</div>
+      <div class="piggy-sub" id="sveta-piggy-sub">Наград ещё не получено</div>
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="sveta-btn-today" onclick="switchView('sveta','today')">📋 Задания на сегодня</button>
+      <button class="view-btn" id="sveta-btn-cal" onclick="switchView('sveta','calendar')">🗓️ Календарь</button>
+    </div>
+    <div id="sveta-view-today">
+      <div class="today-date" id="sveta-today-date"></div>
+      <div id="sveta-double-notice"></div>
+      <div id="sveta-seasonal-block"></div>
+      <div id="sveta-family-block"></div>
+      <div id="sveta-challenge-block"></div>
+      <div class="category"><div class="category-title">🏠 Бытовые задачи</div><div class="task-list" id="sveta-home"></div></div>
+      <div class="category"><div class="category-title">📚 Учёба и оценки</div><div class="task-list" id="sveta-study"></div></div>
+      <div class="category"><div class="category-title">⚽ Секции и активность</div><div class="task-list" id="sveta-sport"></div></div>
+      <div class="category"><div class="category-title">📖 Книги</div><div class="task-list" id="sveta-books"></div></div>
+      <div id="sveta-team-bonus"></div>
+    </div>
+    <div id="sveta-view-cal" style="display:none">
+      <div class="cal-nav"><button onclick="calNav('sveta',-1)">←</button><span id="sveta-cal-month"></span><button onclick="calNav('sveta',1)">→</button></div>
+      <div class="cal-grid" id="sveta-calendar"></div>
+    </div>
+    <button class="reset-btn" onclick="fullReset('sveta')">🔄 Полный сброс</button>
+  </div>
+
+  <!-- ВАЛЕРА -->
+  <div class="tab-content" id="content-valera">
+    <div class="star-card">
+      <div class="kid-name valera">🚀 Валера</div>
+      <div class="star-jar">⭐</div>
+      <div class="star-count-big" id="valera-balance">0</div>
+      <div class="star-label">звёздочек накоплено</div>
+      <div class="star-details" id="valera-details">Заработано: 0 · Потрачено: 0</div>
+      <div class="star-can-buy" id="valera-can-buy"></div>
+      <div class="shop-hint">🛒 Зайди в магазин, чтобы обменять звёздочки на призы!</div>
+    </div>
+    <div class="level-section" id="valera-level-section"></div>
+    <div class="piggy-card">
+      <div class="piggy-title">🐖 Копилка Валеры</div>
+      <div class="piggy-amount"><span id="valera-piggy">0</span> ₽</div>
+      <div class="piggy-sub" id="valera-piggy-sub">Наград ещё не получено</div>
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="valera-btn-today" onclick="switchView('valera','today')">📋 Задания на сегодня</button>
+      <button class="view-btn" id="valera-btn-cal" onclick="switchView('valera','calendar')">🗓️ Календарь</button>
+    </div>
+    <div id="valera-view-today">
+      <div class="today-date" id="valera-today-date"></div>
+      <div id="valera-double-notice"></div>
+      <div id="valera-seasonal-block"></div>
+      <div id="valera-family-block"></div>
+      <div id="valera-challenge-block"></div>
+      <div class="category"><div class="category-title">🏠 Бытовые задачи</div><div class="task-list" id="valera-home"></div></div>
+      <div class="category"><div class="category-title">📚 Учёба и оценки</div><div class="task-list" id="valera-study"></div></div>
+      <div class="category"><div class="category-title">⚽ Секции и активность</div><div class="task-list" id="valera-sport"></div></div>
+      <div class="category"><div class="category-title">📖 Книги</div><div class="task-list" id="valera-books"></div></div>
+      <div id="valera-team-bonus"></div>
+    </div>
+    <div id="valera-view-cal" style="display:none">
+      <div class="cal-nav"><button onclick="calNav('valera',-1)">←</button><span id="valera-cal-month"></span><button onclick="calNav('valera',1)">→</button></div>
+      <div class="cal-grid" id="valera-calendar"></div>
+    </div>
+    <button class="reset-btn" onclick="fullReset('valera')">🔄 Полный сброс</button>
+  </div>
+
+  <!-- МАГАЗИН -->
+  <div class="tab-content" id="content-shop">
+    <div class="shop-balance-card">
+      <h2>🛒 Магазин призов</h2>
+      <div class="shop-bal-row">
+        <div class="shop-bal-item sveta">🌸 Света: <b><span id="shop-sveta-bal">0</span></b> ⭐</div>
+        <div class="shop-bal-item valera">🚀 Валера: <b><span id="shop-valera-bal">0</span></b> ⭐</div>
+      </div>
+      <div class="shop-bal-total">Вместе: <span id="shop-total-bal">0</span> ⭐</div>
+    </div>
+    <div id="shop-target-section"></div>
+    <div class="shop-subtabs">
+      <button class="shop-subtab active" id="subtab-common" onclick="switchShopTab('common')">🤝 Общие призы</button>
+      <button class="shop-subtab" id="subtab-individual" onclick="switchShopTab('individual')">👤 Индивидуальные призы</button>
+    </div>
+    <div id="shop-common-section"><div id="common-prizes"></div></div>
+    <div id="shop-individual-section" style="display:none">
+      <div class="indiv-section">
+        <div class="indiv-header sveta">
+          <div><span class="name">🌸 Света</span> <span class="indiv-piggy">🐖 <span id="indiv-sveta-piggy">0</span> ₽</span></div>
+          <div class="bal"><span id="indiv-sveta-bal">0</span> ⭐</div>
+        </div>
+        <div id="indiv-sveta-prizes"></div>
+      </div>
+      <div class="indiv-section">
+        <div class="indiv-header valera">
+          <div><span class="name">🚀 Валера</span> <span class="indiv-piggy">🐖 <span id="indiv-valera-piggy">0</span> ₽</span></div>
+          <div class="bal"><span id="indiv-valera-bal">0</span> ⭐</div>
+        </div>
+        <div id="indiv-valera-prizes"></div>
+      </div>
+    </div>
+    <div class="purch-log-title">📋 История покупок</div>
+    <div id="purchase-log"></div>
+  </div>
+
+  <!-- БЕЙДЖИ -->
+  <div class="tab-content" id="content-badges">
+    <h2 style="text-align:center;color:var(--purple);margin-bottom:1.5rem">🏆 Твои достижения</h2>
+    <div id="badges-content"></div>
+  </div>
+
+  <!-- ОТЧЁТ -->
+  <div class="tab-content" id="content-report">
+    <h2 style="text-align:center;color:var(--purple);margin-bottom:1.5rem">📊 Отчёт недели</h2>
+    <div class="report-card">
+      <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:1.5rem;margin-bottom:1rem">
+        <div class="report-stat"><div class="report-stat-val" id="rep-stars">0</div><div class="report-stat-label">Всего звёзд</div></div>
+        <div class="report-stat"><div class="report-stat-val" id="rep-tasks">0</div><div class="report-stat-label">Заданий выполнено</div></div>
+        <div class="report-stat"><div class="report-stat-val" id="rep-family">0</div><div class="report-stat-label">Семейных моментов</div></div>
+        <div class="report-stat"><div class="report-stat-val" id="rep-challenges">0</div><div class="report-stat-label">Челленджей</div></div>
+      </div>
+      <div class="report-text" id="rep-text"></div>
+    </div>
+    <button onclick="generateReport()" style="display:block;margin:0 auto;padding:.8rem 2rem;background:var(--purple);color:#fff;border:none;border-radius:50px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit">Обновить отчёт</button>
+  </div>
+
+  <!-- Модалка покупки -->
+  <div class="purchase-overlay" id="purchase-modal" onclick="cancelPurchase()">
+    <div class="purchase-box" onclick="event.stopPropagation()">
+      <span class="big-icon" id="purch-icon">🎁</span>
+      <h3 id="purch-title">Купить приз?</h3>
+      <div class="purch-details" id="purch-details"></div>
+      <div class="purchase-buttons">
+        <button class="purch-btn-cancel" onclick="cancelPurchase()">Отмена</button>
+        <button class="purch-btn-confirm" id="purch-confirm-btn" onclick="confirmPurchase()">Купить!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модалка успеха -->
+  <div class="reward-overlay" id="reward" onclick="closeReward()">
+    <div class="reward-box">
+      <span class="big-star" id="reward-icon">🎉</span>
+      <h2 id="reward-name">Ура!</h2>
+      <p id="reward-text">Награда получена!</p>
+      <button onclick="closeReward()">Класс! 🎉</button>
+    </div>
+  </div>
+
+  <!-- Модалка родителя -->
+  <div class="parent-modal" id="parent-modal" onclick="if(event.target===this)this.classList.remove('show')">
+    <div class="parent-box">
+      <span class="close" onclick="this.closest('.parent-modal').classList.remove('show')">×</span>
+      <h2>🔒 Настройки родителя</h2>
+      <button class="parent-btn-row" style="background:#ede9fe;color:var(--purple)" onclick="exportData()">💾 Экспорт данных (JSON)</button>
+      <button class="parent-btn-row" style="background:#ede9fe;color:var(--purple)" onclick="importData()">⬇️ Импорт данных</button>
+      <button class="parent-btn-row" style="background:#fee2e2;color:#ef4444" onclick="resetAll()">⚠️ Полный сброс (всё)</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti-browser.min.js"></script>
+  <script>
+    const labels = { sveta:'Света', valera:'Валера' };
+
+    const shopPrizes = {
+      common: [
+        { id:'kino', icon:'🎬', label:'Поход в кино', cost:800 },
+        { id:'kiselek', icon:'🎠', label:'Поход в Киселёк', cost:1000 },
+      ],
+      individual: [
+        { id:'pc1h', icon:'🎮', label:'1 час игры в компьютер', cost:100 },
+        { id:'money100', icon:'💰', label:'100 рублей', cost:200, money:100 },
+        { id:'stickers', icon:'✨', label:'Набор наклеек', cost:250 },
+      ],
+    };
+
+    const tasks = {
+      sveta: {
+        home: [{label:'🪥 Почистил(а) зубы',points:1},{label:'🧹 Помощь по дому',points:1},{label:'🛏️ Чистота в комнате',points:1}],
+        study: [{label:'Оценка 5',points:2},{label:'Оценка 4',points:1},{label:'Оценка 3',points:-1},{label:'Оценка 2',points:-2}],
+        sport: [{label:'Старался(ась) на всех секциях за неделю',points:3}],
+        books: [{label:'Прочитано 20 страниц книги',points:1},{label:'Прочитано 40 страниц книги',points:2},{label:'Прочитано 60 страниц книги',points:3}],
+      },
+      valera: {
+        home: [{label:'🪥 Почистил(а) зубы',points:1},{label:'🧹 Помощь по дому',points:1},{label:'🛏️ Чистота в комнате',points:1}],
+        study: [{label:'Оценка 5',points:2},{label:'Оценка 4',points:1},{label:'Оценка 3',points:-1},{label:'Оценка 2',points:-2}],
+        sport: [{label:'Старался(ась) на всех секциях за неделю',points:3}],
+        books: [{label:'Прочитано 20 страниц книги',points:1},{label:'Прочитано 40 страниц книги',points:2},{label:'Прочитано 60 страниц книги',points:3}],
+      },
+    };
+
+    // УРОВНИ: 50 XP на каждый уровень, бесконечно
+    const LEVEL_ROLES = [
+      'Новичок','Исследователь','Помощник приключений',
+      'Капитан недели','Лидер приключений','Мастер звёзд',
+      'Легенда семьи','Герой звёздного пути'
+    ];
+    const XP_PER_LEVEL = 50;
+
+    const CHALLENGES = [
+      {id:'ch01',icon:'🧽',title:'Идеальный порядок',goal:'Все бытовые чекбоксы каждый день',reward:7,type:'days',steps:7},
+      {id:'ch02',icon:'🪥',title:'Улыбка чемпиона',goal:'Чистка зубов 7 дней без пропусков',reward:6,type:'days',steps:7},
+      {id:'ch03',icon:'🍳',title:'Юный повар',goal:'Помочь приготовить завтрак или ужин 3 раза',reward:7,type:'count',steps:3},
+      {id:'ch04',icon:'🌅',title:'Жаворонок',goal:'Проснуться самостоятельно 5 дней',reward:6,type:'days',steps:5},
+      {id:'ch05',icon:'📚',title:'Книжный марафон',goal:'Прочитать 150 страниц',reward:8,type:'count',steps:5},
+      {id:'ch06',icon:'📖',title:'Книжный сыщик',goal:'100 страниц + 3 новых слова',reward:7,type:'items',steps:4,stepLabels:['100 стр прочитано','Слово 1','Слово 2','Слово 3']},
+      {id:'ch07',icon:'📝',title:'Без троек',goal:'Неделя без 3 и 2',reward:7,type:'days',steps:7},
+      {id:'ch08',icon:'💡',title:'Один новый факт в день',goal:'7 фактов за неделю',reward:5,type:'days',steps:7},
+      {id:'ch09',icon:'💪',title:'Зарядка-чемпион',goal:'Утренняя зарядка 5 дней',reward:7,type:'days',steps:5},
+      {id:'ch10',icon:'🤸',title:'Утренний заряд',goal:'10 приседаний/прыжков 5 дней',reward:6,type:'days',steps:5},
+      {id:'ch11',icon:'🏃',title:'Уличный чемпион',goal:'3 активные игры на улице',reward:7,type:'count',steps:3},
+      {id:'ch12',icon:'🎨',title:'Арт-эксперимент',goal:'3 работы в любой технике',reward:8,type:'items',steps:3,stepLabels:['Работа 1','Работа 2','Работа 3']},
+      {id:'ch13',icon:'🎨',title:'Творческая мастерская',goal:'3 поделки или рисунка',reward:7,type:'items',steps:3,stepLabels:['Поделка 1','Поделка 2','Поделка 3']},
+      {id:'ch14',icon:'🤝',title:'Добрые дела',goal:'5 добрых поступков',reward:8,type:'count',steps:5},
+      {id:'ch15',icon:'🍂',title:'Осенний исследователь',goal:'Собрать 7 природных объектов',reward:8,type:'count',steps:7},
+      {id:'ch16',icon:'💖',title:'Домашний уют',goal:'5 уютных вечеров',reward:7,type:'count',steps:5},
+      {id:'ch17',icon:'☀️',title:'Солнечный дневник',goal:'7 записей «понравилось сегодня»',reward:7,type:'days',steps:7},
+      {id:'ch18',icon:'🎉',title:'Мини-праздник',goal:'Устроить 1 семейный праздник',reward:9,type:'items',steps:3,stepLabels:['Придумал идею','Подготовил вместе','Провели праздник']},
+    ];
+
+    const FAMILY_MOMENTS = [
+      {id:'fm01',title:'Записка-сюрприз',desc:'Написать близкому короткую записку и незаметно положить там, где он найдёт.',steps:['Написал текст','Выбрал место','Положил записку']},
+      {id:'fm02',title:'Помощник на 10 минут',desc:'Предложить и реально помочь с одним маленьким делом.',steps:['Спросил «Чем помочь?»','Сделал дело','Сказал «Готово»']},
+      {id:'fm03',title:'Фото вдвоём',desc:'Сделать одно фото с кем-то из семьи и сохранить в галерею.',steps:['Договорились','Сфотографировались','Сохранили фото']},
+      {id:'fm04',title:'Три тёплых слова',desc:'Сказать три фразы: «Спасибо за…», «Мне нравится, когда ты…», «Я ценю за…».',steps:['Придумал 3 фразы','Сказал вслух','Увидел реакцию']},
+      {id:'fm05',title:'Один семейный вечер без экранов',desc:'Вечер без телефонов и мультиков. Настольная игра, готовка или разговор.',steps:['Назначили вечер','Сделали вместе одно дело','Каждый сказал «Спасибо за…»']},
+      {id:'fm06',title:'Маленькая забота',desc:'Заметить, что близкому тяжело, и сделать одно маленькое дело.',steps:['Заметил состояние','Предложил помощь','Сделал дело']},
+      {id:'fm07',title:'Чашка чая вместе',desc:'Сесть рядом на 15 минут, налить чай, поговорить.',steps:['Нашли 15 минут','Попили вместе','Каждый сказал фразу о дне']},
+      {id:'fm08',title:'Совместная готовка',desc:'Приготовить что-то простое вместе с мамой или папой.',steps:['Выбрали рецепт','Готовили вместе','Попробовали результат']},
+      {id:'fm09',title:'Прогулка с разговором',desc:'Сходить на 15-минутную прогулку и поговорить о хорошем.',steps:['Вышли на прогулку','Поговорили','Вернулись с улыбкой']},
+      {id:'fm10',title:'Настольная игра',desc:'Сыграть в одну настольную игру всей семьёй.',steps:['Выбрали игру','Сыграли','Решили, кто молодец']},
+      {id:'fm11',title:'Спасибо за день',desc:'Перед сном сказать каждому: «Спасибо, что ты был рядом сегодня».',steps:['Подошёл к каждому','Сказал «Спасибо»','Получил ответную улыбку']},
+      {id:'fm12',title:'Сделай маме приятное',desc:'Придумать и сделать одну вещь, которая порадует маму.',steps:['Придумал','Сделал','Мама улыбнулась']},
+    ];
+
+    const BADGES = [
+      {id:'b01',icon:'⭐',name:'Первые 10 звёзд',cond:(k,d)=>calcTotalEarned(k)>=10},
+      {id:'b02',icon:'🌟',name:'50 звёзд',cond:(k,d)=>calcTotalEarned(k)>=50},
+      {id:'b03',icon:'💫',name:'100 звёзд',cond:(k,d)=>calcTotalEarned(k)>=100},
+      {id:'b04',icon:'🏆',name:'200 звёзд',cond:(k,d)=>calcTotalEarned(k)>=200},
+      {id:'b05',icon:'👑',name:'500 звёзд',cond:(k,d)=>calcTotalEarned(k)>=500},
+      {id:'b06',icon:'🔥',name:'Неделя без пропусков',cond:(k,d)=>(d[k].perfectWeek===true)},
+      {id:'b07',icon:'📚',name:'Книжный червь',cond:(k,d)=>(d[k].booksRead||0)>=3},
+      {id:'b08',icon:'🏃',name:'Спортсмен',cond:(k,d)=>(d[k].sportsCount||0)>=5},
+      {id:'b09',icon:'🧽',name:'Помощник',cond:(k,d)=>(d[k].helpCount||0)>=10},
+      {id:'b10',icon:'🎨',name:'Творец',cond:(k,d)=>(d[k].artCount||0)>=3},
+      {id:'b11',icon:'❤️',name:'Семейный момент',cond:(k,d)=>(d[k].familyMomentsCount||0)>=1},
+      {id:'b12',icon:'💖',name:'5 семейных моментов',cond:(k,d)=>(d[k].familyMomentsCount||0)>=5},
+      {id:'b13',icon:'🍂',name:'Осенний исследователь',cond:(k,d)=>(d[k].seasonalAutumn===true)},
+      {id:'b14',icon:'❄️',name:'Зимний чемпион',cond:(k,d)=>(d[k].seasonalWinter===true)},
+      {id:'b15',icon:'🌷',name:'Весенний следопыт',cond:(k,d)=>(d[k].seasonalSpring===true)},
+      {id:'b16',icon:'🤝',name:'Доброе сердце',cond:(k,d)=>(d[k].kindDeeds||0)>=5},
+      {id:'b17',icon:'🚀',name:'1000 звёзд',cond:(k,d)=>calcTotalEarned(k)>=1000},
+      {id:'b18',icon:'🔥',name:'День удвоения',cond:(k,d)=>(d[k].doubleDayHit===true)},
+    ];
+
+    const SEASONAL_EVENTS = [
+      {id:'autumn',name:'🍂 Осенние каникулы!',start:'10-26',end:'11-03',decor:['🍂','🍁','🍃'],
+       tasks:[{id:'walk',label:'🍃 Прогулка на свежем воздухе',points:1},{id:'leaf',label:'🍂 Собрать гербарий (1 новый лист)',points:2},{id:'cook',label:'🍎 Помощь на кухне (сезонное блюдо)',points:1},{id:'fact',label:'🦔 Новый факт о животных осенью',points:1}],
+       bonusDays:6},
+      {id:'winter',name:'❄️ Зимние каникулы!',start:'12-31',end:'01-10',decor:['❄️','⛄','🌨️'],
+       tasks:[{id:'outdoor',label:'⛄ Зимняя активность на улице',points:2},{id:'gift',label:'🎁 Сделать что-то для семьи',points:1},{id:'cook',label:'🍪 Помощь с праздничной едой',points:1},{id:'read',label:'📖 20 страниц книги',points:1}],
+       bonusDays:8,doubleDay:'01-01'},
+      {id:'spring',name:'🌷 Весенние каникулы!',start:'03-27',end:'04-04',decor:['🌷','🌸','🌺'],
+       tasks:[{id:'find',label:'🌷 Найти признак весны',points:2},{id:'birds',label:'🐦 Забота о птицах',points:1},{id:'plant',label:'🌱 Посадить или полить растение',points:1},{id:'sun',label:'☀️ 30 минут на свежем воздухе',points:1}],
+       bonusDays:6},
+    ];
+
+    let data = JSON.parse(localStorage.getItem('kidsStarsV7') || '{}');
+    ['sveta','valera'].forEach(kid => {
+      if(!data[kid]) data[kid] = {};
+      if(!data[kid].days) data[kid].days = {};
+      if(data[kid].spent == null) data[kid].spent = 0;
+      if(data[kid].piggy == null) data[kid].piggy = 0;
+      if(!data[kid].weeklyChallenges) data[kid].weeklyChallenges = [];
+      if(!data[kid].challengeProgress) data[kid].challengeProgress = {};
+      if(!data[kid].familyMoment) data[kid].familyMoment = null;
+      if(!data[kid].familyProgress) data[kid].familyProgress = { steps: [], completed: false };
+      if(data[kid].familyMomentsCount == null) data[kid].familyMomentsCount = 0;
+      if(data[kid].booksRead == null) data[kid].booksRead = 0;
+      if(data[kid].sportsCount == null) data[kid].sportsCount = 0;
+      if(data[kid].helpCount == null) data[kid].helpCount = 0;
+      if(data[kid].artCount == null) data[kid].artCount = 0;
+      if(data[kid].kindDeeds == null) data[kid].kindDeeds = 0;
+      if(data[kid].perfectWeek == null) data[kid].perfectWeek = false;
+      if(data[kid].seasonalAutumn == null) data[kid].seasonalAutumn = false;
+      if(data[kid].seasonalWinter == null) data[kid].seasonalWinter = false;
+      if(data[kid].seasonalSpring == null) data[kid].seasonalSpring = false;
+      if(data[kid].doubleDayHit == null) data[kid].doubleDayHit = false;
+    });
+    if(!data.purchases) data.purchases = [];
+    if(!data.shop) data.shop = { targetItem: null };
+    if(!data.weekStart) data.weekStart = null;
+    if(!data.doubleDay) data.doubleDay = null;
+    if(!data.doubleDayNextGen) data.doubleDayNextGen = null;
+
+    let calState = { sveta:{}, valera:{} };
+    const _now = new Date();
+    calState.sveta = { y:_now.getFullYear(), m:_now.getMonth() };
+    calState.valera = { y:_now.getFullYear(), m:_now.getMonth() };
+    let pendingPurchase = null;
+
+    function save(){ localStorage.setItem('kidsStarsV7', JSON.stringify(data)); }
+    function todayStr(){ return new Date().toISOString().split('T')[0]; }
+    function plural(n,one,few,many){ const m10=n%10,m100=n%100; if(m10===1&&m100!==11)return one; if(m10>=2&&m10<=4&&(m100<10||m100>=20))return few; return many; }
+
+    // ===== ДЕНЬ УДВОЕНИЯ =====
+    function generateDoubleDay(){
+      const today=new Date();
+      const offset=Math.floor(Math.random()*12)+2;
+      const dd=new Date(today);
+      dd.setDate(today.getDate()+offset);
+      data.doubleDay=dd.toISOString().split('T')[0];
+      const nextGen=new Date(today);
+      nextGen.setDate(today.getDate()+14);
+      data.doubleDayNextGen=nextGen.toISOString().split('T')[0];
+      save();
+    }
+    function checkDoubleDay(){
+      const today=todayStr();
+      if(!data.doubleDay || (data.doubleDayNextGen && today>=data.doubleDayNextGen)){
+        generateDoubleDay();
+      }
+    }
+    function isDoubleDay(dateStr){ return dateStr===data.doubleDay; }
+
+    function getWeekStart(){ const n=new Date(); const day=n.getDay()||7; const monday=new Date(n); monday.setDate(n.getDate()-day+1); return monday.toISOString().split('T')[0]; }
+    function isWeekTaskDone(kid){ const monday=getWeekStart(); for(let i=0;i<7;i++){ const d=new Date(monday); d.setDate(d.getDate()+i); const ds=d.toISOString().split('T')[0]; if(data[kid].days[ds]&&data[kid].days[ds]['sport_0']) return{done:true,date:ds}; } return{done:false,date:null}; }
+
+    function checkWeeklyReset(){
+      const ws=getWeekStart();
+      if(data.weekStart && data.weekStart!==ws){
+        ['sveta','valera'].forEach(kid=>{ data[kid].weeklyChallenges=[]; data[kid].challengeProgress={}; data[kid].familyMoment=null; data[kid].familyProgress={steps:[],completed:false}; });
+      }
+      data.weekStart=ws; save(); assignWeeklyChallenges(); assignFamilyMoments();
+    }
+    function assignWeeklyChallenges(){
+      ['sveta','valera'].forEach(kid=>{
+        if(!data[kid].weeklyChallenges || data[kid].weeklyChallenges.length===0){
+          const shuffled=[...CHALLENGES].sort(()=>Math.random()-0.5);
+          data[kid].weeklyChallenges=shuffled.slice(0,3).map(c=>c.id);
+          data[kid].challengeProgress={};
+          data[kid].weeklyChallenges.forEach(cid=>{ data[kid].challengeProgress[cid]={steps:[],accepted:false,completed:false}; });
+          save();
+        }
+      });
+    }
+    function assignFamilyMoments(){
+      ['sveta','valera'].forEach(kid=>{
+        if(!data[kid].familyMoment){
+          const fm=FAMILY_MOMENTS[Math.floor(Math.random()*FAMILY_MOMENTS.length)];
+          data[kid].familyMoment=fm.id;
+          data[kid].familyProgress={steps:new Array(fm.steps.length).fill(false),completed:false};
+          save();
+        }
+      });
+    }
+
+    // УРОВНИ: 50 XP на уровень, бесконечно
+    function getLevel(xp) {
+      const lvl = Math.floor(xp / XP_PER_LEVEL) + 1;
+      const roleIdx = Math.min(lvl - 1, LEVEL_ROLES.length - 1);
+      return { lvl, role: LEVEL_ROLES[roleIdx], xp: (lvl - 1) * XP_PER_LEVEL };
+    }
+    function getNextLevel(xp) {
+      const cur = getLevel(xp);
+      return { lvl: cur.lvl + 1, xp: cur.lvl * XP_PER_LEVEL };
+    }
+    function renderLevel(kid) {
+      const xp = calcTotalEarned(kid);
+      const cur = getLevel(xp);
+      const next = getNextLevel(xp);
+      const into = xp - cur.xp;
+      const pct = Math.round((into / XP_PER_LEVEL) * 100);
+      const remaining = XP_PER_LEVEL - into;
+      document.getElementById(kid + '-level-section').innerHTML =
+        '<div class="level-row"><span style="font-size:1rem;color:#6b21b6">Уровень</span>' +
+        '<span class="level-num">' + cur.lvl + '</span>' +
+        '<span class="level-role">' + cur.role + '</span></div>' +
+        '<div class="xp-bar-container"><div class="xp-fill" style="width:' + pct + '%"></div></div>' +
+        '<div class="xp-text">До уровня ' + (cur.lvl + 1) + ': ' + remaining + ' XP</div>';
+    }
+
+    function calcDayStars(kid,dateStr){
+      const day=data[kid].days[dateStr]; if(!day) return 0;
+      let total=0;
+      ['home','study','sport','books'].forEach(cat=>{ tasks[kid][cat].forEach((task,i)=>{ total+=task.points*(day[cat+'_'+i]||0); }); });
+      const event=getActiveSeasonalEvent();
+      if(event){ const sk='seasonal_'+event.id; const sd=day[sk]||{}; event.tasks.forEach(t=>{ if(sd[t.id]===1){ const isDbl=event.doubleDay===dateStr.slice(5); total+=isDbl?t.points*2:t.points; } }); }
+      if(day.teamBonus===1) total+=1;
+      if(isDoubleDay(dateStr)) total*=2;
+      return total;
+    }
+    function calcTotalEarned(kid){
+      let total=0;
+      Object.keys(data[kid].days).forEach(d=>{ total+=calcDayStars(kid,d); });
+      Object.values(data[kid].challengeProgress).forEach((cp,idx)=>{ if(cp.completed){ const cid=data[kid].weeklyChallenges[idx]; const ch=CHALLENGES.find(c=>c.id===cid); if(ch) total+=ch.reward; } });
+      total+=data[kid].familyMomentsCount*3;
+      return total;
+    }
+    function calcBalance(kid){ return calcTotalEarned(kid)-data[kid].spent; }
+    function calcCommonSplit(cost,sBal,vBal){
+      let sPart=Math.floor(cost/2),vPart=cost-sPart;
+      const sAvail=Math.max(0,sBal),vAvail=Math.max(0,vBal);
+      if(sPart>sAvail){sPart=sAvail;vPart=cost-sPart;}
+      if(vPart>vAvail){vPart=vAvail;sPart=cost-vPart;}
+      return{sveta:sPart,valera:vPart};
+    }
+
+    function getActiveSeasonalEvent(){ const now=new Date(); const md=String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0'); return SEASONAL_EVENTS.find(e=>md>=e.start&&md<=e.end); }
+    function applySeasonalTheme(){
+      const event=getActiveSeasonalEvent(); document.body.className='';
+      if(event){
+        if(event.id==='autumn') document.body.style.background='linear-gradient(180deg,#fef3c7,#fed7aa)';
+        else if(event.id==='winter') document.body.style.background='linear-gradient(180deg,#dbeafe,#bfdbfe)';
+        else if(event.id==='spring') document.body.style.background='linear-gradient(180deg,#d1fae5,#fef9c3)';
+        addDecorElements(event.decor);
+      } else { document.body.style.background=''; document.querySelectorAll('.decor-element').forEach(e=>e.remove()); }
+    }
+    function addDecorElements(emojis){
+      document.querySelectorAll('.decor-element').forEach(e=>e.remove());
+      for(let i=0;i<6;i++){ const el=document.createElement('div'); el.className='decor-element'; el.textContent=emojis[Math.floor(Math.random()*emojis.length)]; el.style.left=Math.random()*100+'vw'; el.style.animationDelay=Math.random()*5+'s'; el.style.animationDuration=(6+Math.random()*6)+'s'; document.body.appendChild(el); }
+    }
+    function renderSeasonalBlock(kid){
+      const event=getActiveSeasonalEvent(); if(!event){ document.getElementById(kid+'-seasonal-block').innerHTML=''; return; }
+      const dStr=todayStr(); if(!data[kid].days[dStr]) data[kid].days[dStr]={};
+      const sk='seasonal_'+event.id; if(!data[kid].days[dStr][sk]) data[kid].days[dStr][sk]={};
+      const isDbl=event.doubleDay===dStr.slice(5);
+      let html='<div class="seasonal-block '+event.id+'"><div class="seasonal-title">'+event.name+'</div>';
+      event.tasks.forEach(t=>{
+        const checked=data[kid].days[dStr][sk][t.id]===1; const pts=isDbl?t.points*2:t.points;
+        html+='<div class="seasonal-task"><input type="checkbox" '+(checked?'checked':'')+' onchange="toggleSeasonal(\''+kid+'\',\''+event.id+'\',\''+t.id+'\','+pts+')"><span>'+t.label+'</span><span class="seasonal-pts">+'+pts+' ⭐'+(isDbl?' ×2':'')+'</span></div>';
+      });
+      html+='</div>';
+      document.getElementById(kid+'-seasonal-block').innerHTML=html;
+    }
+    function toggleSeasonal(kid,eventId,taskId,points){
+      const dStr=todayStr(); const sk='seasonal_'+eventId;
+      if(!data[kid].days[dStr]) data[kid].days[dStr]={}; if(!data[kid].days[dStr][sk]) data[kid].days[dStr][sk]={};
+      const was=data[kid].days[dStr][sk][taskId]===1; data[kid].days[dStr][sk][taskId]=was?0:1;
+      const event=SEASONAL_EVENTS.find(e=>e.id===eventId);
+      if(event){ let activeDays=0; Object.keys(data[kid].days).forEach(date=>{ const sd=data[kid].days[date]&&data[kid].days[date][sk]; if(sd&&Object.values(sd).some(v=>v===1)) activeDays++; }); if(activeDays>=event.bonusDays){ if(eventId==='autumn')data[kid].seasonalAutumn=true; if(eventId==='winter')data[kid].seasonalWinter=true; if(eventId==='spring')data[kid].seasonalSpring=true; } }
+      save(); buildTodayTasks(kid); updateProgress(kid); renderLevel(kid); renderTeamBonus(kid);
+    }
+
+    function renderFamilyBlock(kid){
+      const fmId=data[kid].familyMoment; if(!fmId){ document.getElementById(kid+'-family-block').innerHTML=''; return; }
+      const fm=FAMILY_MOMENTS.find(f=>f.id===fmId); if(!fm){ document.getElementById(kid+'-family-block').innerHTML=''; return; }
+      const prog=data[kid].familyProgress;
+      let stepsHtml=''; fm.steps.forEach((step,i)=>{ const done=prog.steps[i]; stepsHtml+='<div class="fam-step"><input type="checkbox" '+(done?'checked':'')+' '+(prog.completed?'disabled':'')+' onchange="toggleFamilyStep(\''+kid+'\','+i+')"><span>'+step+'</span></div>'; });
+      const statusHtml=prog.completed?'<span class="fam-status done">✅ Выполнено!</span>':'<span class="fam-status progress">В работе</span>';
+      document.getElementById(kid+'-family-block').innerHTML='<div class="family-card"><div class="fam-header">❤️ Семейный челлендж недели</div><div class="fam-title">'+fm.title+'</div><div class="fam-desc">'+fm.desc+'</div><div class="fam-steps">'+stepsHtml+'</div><div class="fam-footer"><span class="fam-reward">Награда: 3 ⭐ + значок «❤️ Семья»</span>'+statusHtml+'</div></div>';
+    }
+    function toggleFamilyStep(kid,stepIndex){
+      const fm=FAMILY_MOMENTS.find(f=>f.id===data[kid].familyMoment);
+      if(!fm||data[kid].familyProgress.completed) return;
+      data[kid].familyProgress.steps[stepIndex]=!data[kid].familyProgress.steps[stepIndex];
+      if(data[kid].familyProgress.steps.every(s=>s)){ data[kid].familyProgress.completed=true; data[kid].familyMomentsCount++; fireConfetti(); }
+      save(); renderFamilyBlock(kid); updateProgress(kid); renderLevel(kid);
+    }
+
+    function renderChallengeBlock(kid){
+      let html='<div class="challenge-section"><div class="category-title">🎯 Челленджи недели (выбери один)</div>';
+      data[kid].weeklyChallenges.forEach((cid,idx)=>{
+        const ch=CHALLENGES.find(c=>c.id===cid); if(!ch) return;
+        const prog=data[kid].challengeProgress[cid]; if(!prog.steps) prog.steps=[];
+        if(!prog.accepted && !prog.completed){
+          html+='<div class="challenge-card"><div class="ch-header"><span class="ch-name">'+ch.icon+' '+ch.title+'</span></div><div class="ch-goal">'+ch.goal+'</div><div class="ch-reward">Награда: '+ch.reward+' ⭐</div><button class="ch-accept-btn" onclick="acceptChallenge(\''+kid+'\',\''+cid+'\')">Взять!</button></div>';
+        } else if(prog.accepted && !prog.completed){
+          let stepsHtml='';
+          for(let i=0;i<ch.steps;i++){
+            const done=prog.steps[i]; let label='';
+            if(ch.type==='days'){ const days=['Пн','Вт','Ср','Чт','Пт','Сб','Вс']; label=days[i]||'День '+(i+1); }
+            else if(ch.type==='count') label=(i+1)+'-й раз';
+            else if(ch.stepLabels) label=ch.stepLabels[i]; else label='Шаг '+(i+1);
+            stepsHtml+='<div class="ch-step"><input type="checkbox" '+(done?'checked':'')+' onchange="toggleChallengeStep(\''+kid+'\',\''+cid+'\','+i+')"><span>'+label+'</span></div>';
+          }
+          html+='<div class="challenge-card accepted"><div class="ch-header"><span class="ch-name">'+ch.icon+' '+ch.title+'</span></div><div class="ch-goal">'+ch.goal+'</div><div class="ch-steps">'+stepsHtml+'</div><div class="ch-reward">Награда: '+ch.reward+' ⭐</div></div>';
+        } else if(prog.completed){
+          html+='<div class="challenge-card completed"><div class="ch-header"><span class="ch-name">'+ch.icon+' '+ch.title+'</span><span>✅</span></div><div class="ch-goal">Выполнено! +'+ch.reward+' ⭐</div></div>';
+        }
+      });
+      html+='</div>';
+      document.getElementById(kid+'-challenge-block').innerHTML=html;
+    }
+    function acceptChallenge(kid,chId){
+      data[kid].weeklyChallenges.forEach(cid=>{ if(cid!==chId && !data[kid].challengeProgress[cid].completed) data[kid].challengeProgress[cid].accepted=false; });
+      data[kid].challengeProgress[chId].accepted=true; if(!data[kid].challengeProgress[chId].steps) data[kid].challengeProgress[chId].steps=[];
+      save(); renderChallengeBlock(kid);
+    }
+    function toggleChallengeStep(kid,chId,stepIndex){
+      const prog=data[kid].challengeProgress[chId]; if(!prog||prog.completed) return; if(!prog.steps) prog.steps=[];
+      prog.steps[stepIndex]=!prog.steps[stepIndex];
+      const ch=CHALLENGES.find(c=>c.id===chId);
+      if(ch && prog.steps.filter(s=>s).length>=ch.steps){
+        prog.completed=true;
+        if(chId==='ch14') data[kid].kindDeeds+=5;
+        if(chId==='ch12'||chId==='ch13') data[kid].artCount+=3;
+        if(chId==='ch05'||chId==='ch06') data[kid].booksRead+=1;
+        fireConfetti();
+      }
+      save(); renderChallengeBlock(kid); updateProgress(kid); renderLevel(kid);
+    }
+
+    function renderTeamBonus(kid){
+      const dStr=todayStr();
+      const homeIds=tasks[kid].home.map((t,i)=>'home_'+i);
+      const k1Done=homeIds.every(id=>data[kid].days[dStr]&&data[kid].days[dStr][id]===1);
+      const otherKid=kid==='sveta'?'valera':'sveta';
+      const otherHomeIds=tasks[otherKid].home.map((t,i)=>'home_'+i);
+      const k2Done=otherHomeIds.every(id=>data[otherKid].days[dStr]&&data[otherKid].days[dStr][id]===1);
+      const bothDone=k1Done&&k2Done;
+      const already=data[kid].days[dStr]&&data[kid].days[dStr].teamBonus===1;
+      if(bothDone && !already){ ['sveta','valera'].forEach(k=>{ if(!data[k].days[dStr]) data[k].days[dStr]={}; data[k].days[dStr].teamBonus=1; }); save(); updateProgress('sveta'); updateProgress('valera'); renderLevel('sveta'); renderLevel('valera'); }
+      else if(!bothDone && already){ ['sveta','valera'].forEach(k=>{ if(data[k].days[dStr]) data[k].days[dStr].teamBonus=0; }); save(); updateProgress('sveta'); updateProgress('valera'); renderLevel('sveta'); renderLevel('valera'); }
+      document.getElementById(kid+'-team-bonus').innerHTML = bothDone ? '<div class="team-bonus active">🎉 Командный бонус: +1 ⭐ каждому! Отличная работа!</div>' : '<div class="team-bonus inactive">Закройте все бытовые вдвоём — бонус +1 ⭐ каждому</div>';
+    }
+
+    function renderDoubleNotice(kid){
+      const tomorrow=new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+      const tomorrowStr=tomorrow.toISOString().split('T')[0];
+      const todayD=todayStr();
+      let html='';
+      if(tomorrowStr===data.doubleDay){
+        html='<div class="double-notice warning">🔥 Завтра — день удвоенных звёзд! Все баллы ×2!</div>';
+      } else if(todayD===data.doubleDay){
+        html='<div class="double-notice active">🔥🔥 СЕГОДНЯ ДЕНЬ УДВОЕННЫХ ЗВЁЗД! Все баллы ×2!</div>';
+        if(!data.sveta.doubleDayHit){ data.sveta.doubleDayHit=true; save(); }
+        if(!data.valera.doubleDayHit){ data.valera.doubleDayHit=true; save(); }
+      }
+      document.getElementById(kid+'-double-notice').innerHTML=html;
+    }
+
+    function buildTodayTasks(kid){
+      const dStr=todayStr(); if(!data[kid].days[dStr]) data[kid].days[dStr]={};
+      const dayData=data[kid].days[dStr];
+      ['home','study','sport','books'].forEach(cat=>{
+        const container=document.getElementById(kid+'-'+cat); container.innerHTML='';
+        tasks[kid][cat].forEach((task,i)=>{
+          const key=cat+'_'+i; const isCheckbox=cat==='home'||cat==='sport'; const isNeg=task.points<0;
+          let controlHtml='',isDone=false,extraInfo='';
+          if(isCheckbox){
+            if(cat==='sport'){
+              const weekInfo=isWeekTaskDone(kid);
+              if(weekInfo.done){ isDone=true; if(weekInfo.date!==dStr){ const wd=new Date(weekInfo.date); const dayNames=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота']; extraInfo=' <small>(отмечено: '+dayNames[wd.getDay()]+')</small>'; controlHtml='<div class="task-checkbox checked locked">✓</div>'; } else { controlHtml='<div class="task-checkbox checked" onclick="toggleCheck(\''+kid+'\',\''+cat+'\','+i+')">✓</div>'; } }
+              else { controlHtml='<div class="task-checkbox" onclick="toggleCheck(\''+kid+'\',\''+cat+'\','+i+')"></div>'; }
+            } else {
+              isDone=dayData[key]===1; controlHtml='<div class="task-checkbox '+(isDone?'checked':'')+'" onclick="toggleCheck(\''+kid+'\',\''+cat+'\','+i+')">'+(isDone?'✓':'')+'</div>';
+            }
+          } else {
+            const count=dayData[key]||0; isDone=count>0;
+            controlHtml='<div class="counter"><button class="counter-btn minus" onclick="changeCount(\''+kid+'\',\''+cat+'\','+i+',-1)" '+(count===0?'disabled':'')+'>−</button><span class="counter-val">'+count+'</span><button class="counter-btn plus" onclick="changeCount(\''+kid+'\',\''+cat+'\','+i+',1)">+</button></div>';
+          }
+          const div=document.createElement('div'); div.className='task-item'+(isDone?' done':'');
+          div.innerHTML='<div class="task-left"><span class="task-label">'+task.label+extraInfo+'</span><span class="task-points '+kid+(isNeg?' neg':'')+'">'+(task.points>0?'+':'')+task.points+' ⭐</span></div>'+controlHtml;
+          container.appendChild(div);
+        });
+      });
+      const d=new Date(); const months=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря']; const dayNames=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+      const todayStars=calcDayStars(kid,dStr);
+      document.getElementById(kid+'-today-date').innerHTML='📅 '+d.getDate()+' '+months[d.getMonth()]+', '+dayNames[d.getDay()]+'<br><span class="day-stars">Сегодня заработано: '+todayStars+' ⭐'+(isDoubleDay(dStr)?' (×2!)':'')+'</span>';
+      renderDoubleNotice(kid);
+      renderSeasonalBlock(kid); renderFamilyBlock(kid); renderChallengeBlock(kid); renderTeamBonus(kid);
+    }
+
+    function toggleCheck(kid,cat,idx){
+      const key=cat+'_'+idx; const dStr=todayStr(); if(!data[kid].days[dStr]) data[kid].days[dStr]={};
+      if(cat==='sport'){ const weekInfo=isWeekTaskDone(kid); if(weekInfo.done&&weekInfo.date!==dStr) return; }
+      const cur=data[kid].days[dStr][key]||0; data[kid].days[dStr][key]=cur?0:1;
+      if(cat==='home'&&idx===1){ if(data[kid].days[dStr][key]) data[kid].helpCount++; else data[kid].helpCount=Math.max(0,data[kid].helpCount-1); }
+      if(cat==='sport'&&idx===0){ if(data[kid].days[dStr][key]) data[kid].sportsCount++; }
+      save(); buildTodayTasks(kid); updateProgress(kid); renderLevel(kid); renderCalendar(kid); renderTeamBonus(kid==='sveta'?'valera':'sveta'); buildTodayTasks(kid==='sveta'?'valera':'sveta');
+    }
+    function changeCount(kid,cat,idx,delta){
+      const key=cat+'_'+idx; const dStr=todayStr(); if(!data[kid].days[dStr]) data[kid].days[dStr]={};
+      const cur=data[kid].days[dStr][key]||0; data[kid].days[dStr][key]=Math.max(0,cur+delta);
+      if(cat==='books'&&delta>0) data[kid].booksRead+=delta;
+      save(); buildTodayTasks(kid); updateProgress(kid); renderLevel(kid); renderCalendar(kid);
+    }
+
+    function updateProgress(kid){
+      const balance=calcBalance(kid); const totalEarned=calcTotalEarned(kid); const spent=data[kid].spent;
+      document.getElementById(kid+'-balance').textContent=balance;
+      document.getElementById(kid+'-details').textContent='Заработано: '+totalEarned+' · Потрачено: '+spent;
+      document.getElementById(kid+'-piggy').textContent=data[kid].piggy;
+      document.getElementById(kid+'-piggy-sub').textContent=data[kid].piggy===0?'Наград ещё не получено':'Всего получено: '+data[kid].piggy+' ₽';
+      const canBuy=document.getElementById(kid+'-can-buy');
+      const affordable=shopPrizes.individual.filter(p=>p.cost<=balance).sort((a,b)=>b.cost-a.cost);
+      if(affordable.length>0){ canBuy.innerHTML='🎁 Можно купить: '+affordable.map(p=>p.icon).join(' '); canBuy.style.color='var(--green)'; }
+      else { const cheapest=Math.min(...shopPrizes.individual.map(p=>p.cost)); const left=cheapest-balance; canBuy.innerHTML='До первого приза: '+left+' '+plural(left,'звёздочку','звёздочки','звёздочек'); canBuy.style.color='#9ca3af'; }
+    }
+
+    function calNav(kid,dir){ calState[kid].m+=dir; if(calState[kid].m<0){calState[kid].m=11;calState[kid].y--;} if(calState[kid].m>11){calState[kid].m=0;calState[kid].y++;} renderCalendar(kid); }
+    function renderCalendar(kid){
+      const {y,m}=calState[kid]; const firstDay=new Date(y,m,1); const daysInMonth=new Date(y,m+1,0).getDate();
+      let firstDow=firstDay.getDay(); if(firstDow===0)firstDow=6; else firstDow--;
+      const monthNames=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+      document.getElementById(kid+'-cal-month').textContent=monthNames[m]+' '+y;
+      const dayNames=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+      let html=dayNames.map(d=>'<div class="cal-day-name">'+d+'</div>').join('');
+      for(let i=0;i<firstDow;i++) html+='<div class="cal-cell empty"></div>';
+      const today=todayStr();
+      for(let d=1;d<=daysInMonth;d++){
+        const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); const stars=calcDayStars(kid,ds);
+        let cls='cal-cell'; if(ds===today)cls+=' today'; else if(ds>today)cls+=' future'; else if(stars===0)cls+=' missed'; if(stars>0)cls+=' earned';
+        if(isDoubleDay(ds)) cls+=' double';
+        html+='<div class="'+cls+'"><div class="cal-date">'+d+'</div>'+(stars>0?'<div class="cal-stars">'+stars+'⭐</div>':'')+'</div>';
+      }
+      document.getElementById(kid+'-calendar').innerHTML=html;
+    }
+
+    function switchTab(name){
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+      document.querySelector('.tab-'+name).classList.add('active');
+      document.getElementById('content-'+name).classList.add('active');
+      if(name==='shop') buildShop(); if(name==='badges') renderBadges(); if(name==='report') generateReport();
+    }
+    function switchView(kid,view){
+      const btnT=document.getElementById(kid+'-btn-today'),btnC=document.getElementById(kid+'-btn-cal');
+      const vT=document.getElementById(kid+'-view-today'),vC=document.getElementById(kid+'-view-cal');
+      if(view==='today'){btnT.classList.add('active');btnC.classList.remove('active');vT.style.display='block';vC.style.display='none';}
+      else{btnC.classList.add('active');btnT.classList.remove('active');vC.style.display='block';vT.style.display='none';renderCalendar(kid);}
+    }
+    function switchShopTab(section){
+      const btnC=document.getElementById('subtab-common'),btnI=document.getElementById('subtab-individual');
+      const secC=document.getElementById('shop-common-section'),secI=document.getElementById('shop-individual-section');
+      if(section==='common'){btnC.classList.add('active');btnI.classList.remove('active');secC.style.display='block';secI.style.display='none';}
+      else{btnI.classList.add('active');btnC.classList.remove('active');secI.style.display='block';secC.style.display='none';}
+    }
+
+    function buildShop(){
+      const sBal=calcBalance('sveta'),vBal=calcBalance('valera');
+      const sAvail=Math.max(0,sBal),vAvail=Math.max(0,vBal);
+      document.getElementById('shop-sveta-bal').textContent=sBal;
+      document.getElementById('shop-valera-bal').textContent=vBal;
+      document.getElementById('shop-total-bal').textContent=sAvail+vAvail;
+      document.getElementById('indiv-sveta-bal').textContent=sBal;
+      document.getElementById('indiv-valera-bal').textContent=vBal;
+      document.getElementById('indiv-sveta-piggy').textContent=data.sveta.piggy;
+      document.getElementById('indiv-valera-piggy').textContent=data.valera.piggy;
+      renderCommonPrizes(sBal,vBal); renderIndividualPrizes('sveta',sBal); renderIndividualPrizes('valera',vBal);
+      renderPurchaseLog(); renderTargetSection();
+    }
+    function renderCommonPrizes(sBal,vBal){
+      const sAvail=Math.max(0,sBal),vAvail=Math.max(0,vBal),combined=sAvail+vAvail;
+      const sorted=shopPrizes.common.slice().sort((a,b)=>a.cost-b.cost);
+      document.getElementById('common-prizes').innerHTML=sorted.map(prize=>{
+        const split=calcCommonSplit(prize.cost,sBal,vBal); const canAfford=combined>=prize.cost; const isTarget=data.shop.targetItem===prize.id;
+        let targetHtml=''; if(isTarget&&!canAfford){ const pct=Math.min(100,Math.round(combined/prize.cost*100)); targetHtml='<div class="target-bar-bg"><div class="target-bar-fill" style="width:'+pct+'%"></div></div><div class="target-bar-text">'+combined+' / '+prize.cost+' ⭐ ('+pct+'%)</div>'; }
+        let targetBtn=!isTarget?'<button class="prize-target-btn" onclick="event.stopPropagation();setTarget(\''+prize.id+'\')">🎯 Хочу это!</button>':'<button class="prize-target-btn" style="background:#fee2e2;color:#ef4444;border-color:#ef4444" onclick="event.stopPropagation();setTarget(null)">Снять цель</button>';
+        return '<div class="prize-card '+(canAfford?'':'disabled')+(isTarget?' target':'')+'" '+(canAfford?'onclick=openPurchase(\'common\',\''+prize.id+'\')':'')+'><div class="prize-icon">'+prize.icon+'</div><div class="prize-info"><div class="prize-name">'+prize.label+'</div><div class="prize-cost">'+prize.cost+' ⭐</div><div class="prize-split"><span class="s">Света: '+split.sveta+'⭐</span> · <span class="v">Валера: '+split.valera+'⭐</span></div>'+targetHtml+targetBtn+'</div>'+(canAfford?'<button class="prize-buy-btn" onclick="event.stopPropagation();openPurchase(\'common\',\''+prize.id+'\')">Купить</button>':'<span class="prize-not-enough">Не хватает</span>')+'</div>';
+      }).join('');
+    }
+    function renderIndividualPrizes(kid,bal){
+      const avail=Math.max(0,bal); const sorted=shopPrizes.individual.slice().sort((a,b)=>a.cost-b.cost);
+      document.getElementById('indiv-'+kid+'-prizes').innerHTML=sorted.map(prize=>{
+        const canAfford=avail>=prize.cost;
+        return '<div class="prize-card '+(canAfford?'':'disabled')+'" '+(canAfford?'onclick=openPurchase(\'individual\',\''+prize.id+'\',\''+kid+'\')':'')+'><div class="prize-icon">'+prize.icon+'</div><div class="prize-info"><div class="prize-name">'+prize.label+(prize.money?' → 💰':'')+'</div><div class="prize-cost">'+prize.cost+' ⭐</div></div>'+(canAfford?'<button class="prize-buy-btn" onclick="event.stopPropagation();openPurchase(\'individual\',\''+prize.id+'\',\''+kid+'\')">Купить</button>':'<span class="prize-not-enough">Не хватает</span>')+'</div>';
+      }).join('');
+    }
+    function renderTargetSection(){
+      const el=document.getElementById('shop-target-section');
+      if(!data.shop.targetItem){ el.innerHTML=''; return; }
+      const prize=shopPrizes.common.find(p=>p.id===data.shop.targetItem);
+      if(!prize){ data.shop.targetItem=null; el.innerHTML=''; return; }
+      const combined=Math.max(0,calcBalance('sveta'))+Math.max(0,calcBalance('valera'));
+      const pct=Math.min(100,Math.round(combined/prize.cost*100));
+      el.innerHTML='<div style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:1rem;padding:1rem;margin-bottom:1rem;text-align:center"><div style="font-size:1.1rem;font-weight:bold;color:#92400e">🎯 Цель: '+prize.icon+' '+prize.label+'</div><div class="target-bar-bg" style="max-width:400px;margin:.5rem auto 0"><div class="target-bar-fill" style="width:'+pct+'%"></div></div><div class="target-bar-text">'+combined+' / '+prize.cost+' ⭐ — осталось '+Math.max(0,prize.cost-combined)+'</div></div>';
+    }
+    function setTarget(itemId){ data.shop.targetItem=itemId; save(); buildShop(); }
+    function renderPurchaseLog(){
+      const container=document.getElementById('purchase-log');
+      if(data.purchases.length===0){ container.innerHTML='<p style="color:#9ca3af;font-size:.9rem">Пока нет покупок</p>'; return; }
+      container.innerHTML=data.purchases.slice().reverse().map(p=>{
+        let cls='purch-log-item',details='';
+        if(p.type==='common'){cls+=' common';details='<span class="purch-log-details">Света: '+p.sveta+'⭐, Валера: '+p.valera+'⭐</span>';}
+        else{cls+=' '+p.kid;details='<span class="purch-log-details">'+p.cost+'⭐'+(p.money?' → +'+p.money+'₽':'')+'</span>';}
+        return '<div class="'+cls+'"><div><div class="purch-log-prize">'+p.label+'</div><div class="purch-log-date">'+p.date+'</div></div><div>'+details+'</div></div>';
+      }).join('');
+    }
+
+    function openPurchase(type,prizeId,kid){
+      const list=type==='common'?shopPrizes.common:shopPrizes.individual; const prize=list.find(p=>p.id===prizeId); if(!prize) return;
+      document.getElementById('purch-icon').textContent=prize.icon;
+      document.getElementById('purch-title').textContent='Купить «'+prize.label+'»?';
+      if(type==='common'){ const sBal=calcBalance('sveta'),vBal=calcBalance('valera'); const split=calcCommonSplit(prize.cost,sBal,vBal); document.getElementById('purch-details').innerHTML='Стоимость: <b>'+prize.cost+' ⭐</b><div class="purch-split"><div class="s">🌸 Света платит: '+split.sveta+' ⭐</div><div class="v">🚀 Валера платит: '+split.valera+' ⭐</div></div>'; pendingPurchase={type,prizeId,split}; }
+      else { const bal=calcBalance(kid); document.getElementById('purch-details').innerHTML='Стоимость: <b>'+prize.cost+' ⭐</b><div>У '+labels[kid]+': '+bal+' ⭐</div>'+(prize.money?'<div>💰 '+prize.money+' ₽ в копилку!</div>':''); pendingPurchase={type,prizeId,kid}; }
+      document.getElementById('purchase-modal').classList.add('show');
+    }
+    function confirmPurchase(){
+      if(!pendingPurchase) return; const {type,prizeId}=pendingPurchase;
+      const list=type==='common'?shopPrizes.common:shopPrizes.individual; const prize=list.find(p=>p.id===prizeId); if(!prize){cancelPurchase();return;}
+      let rewardIcon='🎉',rewardMsg='';
+      if(type==='common'){ const {sveta:sPart,valera:vPart}=pendingPurchase.split; data.sveta.spent+=sPart; data.valera.spent+=vPart; data.purchases.push({date:new Date().toLocaleDateString('ru-RU'),type:'common',label:prize.icon+' '+prize.label,sveta:sPart,valera:vPart}); rewardIcon=prize.icon; rewardMsg='«'+prize.label+'» куплен!<br>Света: '+sPart+'⭐, Валера: '+vPart+'⭐'; }
+      else { const {kid}=pendingPurchase; data[kid].spent+=prize.cost; if(prize.money) data[kid].piggy+=prize.money; data.purchases.push({date:new Date().toLocaleDateString('ru-RU'),type:'individual',kid,label:prize.icon+' '+prize.label,cost:prize.cost,money:prize.money||0}); rewardIcon=prize.icon; rewardMsg='«'+prize.label+'» куплен!'; if(prize.money) rewardMsg+='<br>💰 '+prize.money+' ₽ в копилку!'; }
+      save(); cancelPurchase(); updateProgress('sveta'); updateProgress('valera'); buildShop(); renderLevel('sveta'); renderLevel('valera');
+      document.getElementById('reward-icon').textContent=rewardIcon; document.getElementById('reward-name').textContent='Куплено! 🎉'; document.getElementById('reward-text').innerHTML=rewardMsg; document.getElementById('reward').classList.add('show'); fireConfetti();
+    }
+    function cancelPurchase(){ pendingPurchase=null; document.getElementById('purchase-modal').classList.remove('show'); }
+    function closeReward(){ document.getElementById('reward').classList.remove('show'); }
+
+    function fullReset(kid){
+      if(confirm('Полностью сбросить прогресс для '+labels[kid]+'?')){
+        data[kid]={days:{},spent:0,piggy:0,weeklyChallenges:[],challengeProgress:{},familyMoment:null,familyProgress:{steps:[],completed:false},familyMomentsCount:0,booksRead:0,sportsCount:0,helpCount:0,artCount:0,kindDeeds:0,perfectWeek:false,seasonalAutumn:false,seasonalWinter:false,seasonalSpring:false,doubleDayHit:false};
+        save(); checkWeeklyReset(); buildTodayTasks(kid); updateProgress(kid); renderLevel(kid); renderCalendar(kid); buildShop();
+      }
+    }
+
+    function renderBadges(){
+      let html='';
+      ['sveta','valera'].forEach(kid=>{
+        html+='<div class="badge-section-header '+kid+'">'+(kid==='sveta'?'🌸':'🚀')+' '+labels[kid]+'</div><div class="badge-grid">';
+        BADGES.forEach(badge=>{ const unlocked=badge.cond(kid,data); html+='<div class="badge-item '+(unlocked?'':'locked')+'"><div class="badge-icon">'+badge.icon+'</div><div class="badge-name">'+badge.name+'</div></div>'; });
+        html+='</div>';
+      });
+      document.getElementById('badges-content').innerHTML=html;
+    }
+
+    function generateReport(){
+      const ws=getWeekStart(); let totalStars=0,tasksDone=0,familyDone=0,challengesDone=0;
+      ['sveta','valera'].forEach(kid=>{
+        Object.keys(data[kid].days).forEach(date=>{ if(date>=ws){ totalStars+=calcDayStars(kid,date); ['home','study','sport','books'].forEach(cat=>{ tasks[kid][cat].forEach((t,i)=>{ if(data[kid].days[date][cat+'_'+i]) tasksDone++; }); }); } });
+        familyDone+=data[kid].familyMomentsCount;
+        Object.values(data[kid].challengeProgress).forEach(cp=>{ if(cp.completed) challengesDone++; });
+      });
+      document.getElementById('rep-stars').textContent=totalStars;
+      document.getElementById('rep-tasks').textContent=tasksDone;
+      document.getElementById('rep-family').textContent=familyDone;
+      document.getElementById('rep-challenges').textContent=challengesDone;
+      let txt='';
+      if(familyDone>=2) txt+='Вы замечательно заботились друг о друге! ';
+      if(tasksDone>=20) txt+='Огромное количество выполненных заданий — настоящие чемпионы! ';
+      else if(tasksDone>=10) txt+='Хорошая неделя, много полезного сделано. ';
+      else txt+='На следующей неделе можно сделать чуть больше — у вас получится! ';
+      if(totalStars>=100) txt+='Уже больше 100 звёзд — это серьёзный прогресс!';
+      document.getElementById('rep-text').textContent=txt;
+    }
+
+    function fireConfetti(){
+      if(typeof confetti==='function'){
+        confetti({particleCount:80,spread:70,origin:{y:0.6}});
+        setTimeout(()=>confetti({particleCount:50,angle:60,spread:55,origin:{x:0}}),200);
+        setTimeout(()=>confetti({particleCount:50,angle:120,spread:55,origin:{x:1}}),400);
+      }
+    }
+
+    function exportData(){ const json=JSON.stringify(data,null,2); const blob=new Blob([json],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='star_track_backup_'+todayStr()+'.json'; a.click(); URL.revokeObjectURL(url); }
+    function importData(){ const input=document.createElement('input'); input.type='file'; input.accept='application/json'; input.onchange=e=>{ const file=e.target.files[0]; const reader=new FileReader(); reader.onload=ev=>{ try{ data=JSON.parse(ev.target.result); save(); location.reload(); }catch(err){ alert('Ошибка: файл не подходит.'); } }; reader.readAsText(file); }; input.click(); }
+    function resetAll(){ if(confirm('Точно удалить ВСЕ данные? Это нельзя отменить.')){ localStorage.removeItem('kidsStarsV7'); location.reload(); } }
+
+    // НАПОМИНАНИЕ
+    let reminderInterval;
+    function startReminder() {
+      const banner = document.createElement('div');
+      banner.className = 'reminder-banner';
+      banner.innerHTML = '⭐ Пора отметить звёздочки! <span class="reminder-close">×</span>';
+      document.body.appendChild(banner);
+      const closeBtn = banner.querySelector('.reminder-close');
+      closeBtn.onclick = () => { banner.classList.remove('show'); clearTimeout(hideTimeout); };
+      let hideTimeout;
+      function showBanner() {
+        const dStr = todayStr();
+        const anyUnchecked = ['sveta','valera'].some(kid => {
+          if (!data[kid].days[dStr]) return true;
+          return tasks[kid].home.some((t, i) => !data[kid].days[dStr]['home_' + i]);
+        });
+        if (anyUnchecked) {
+          banner.classList.add('show');
+          hideTimeout = setTimeout(() => { banner.classList.remove('show'); }, 8000);
+        }
+      }
+      reminderInterval = setInterval(showBanner, 30 * 60 * 1000);
+    }
+
+    // ИНИЦИАЛИЗАЦИЯ
+    checkDoubleDay();
+    checkWeeklyReset();
+    applySeasonalTheme();
+    buildTodayTasks('sveta'); buildTodayTasks('valera');
+    updateProgress('sveta'); updateProgress('valera');
+    renderLevel('sveta'); renderLevel('valera');
+    renderCalendar('sveta'); renderCalendar('valera');
+    buildShop();
+    renderBadges();
+    generateReport();
+    startReminder();
+  </script>
+</body>
+</html>
