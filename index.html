@@ -240,7 +240,7 @@
     <button class="tab-btn tab-sveta active" onclick="switchTab('sveta')">🌸 Света</button>
     <button class="tab-btn tab-valera" onclick="switchTab('valera')">🚀 Валера</button>
     <button class="tab-btn tab-shop" onclick="switchTab('shop')">🛒 Магазин</button>
-    <button class="tab-btn tab-badges" onclick="switchTab('badges')">🏆 Бейджи</button>
+    <button class="tab-btn tab-badges" onclick="switchTab('badges')">🏆 Достижения</button>
     <button class="tab-btn tab-report" onclick="switchTab('report')">📊 Отчёт</button>
   </div>
 
@@ -356,6 +356,7 @@
         <div id="indiv-valera-prizes"></div>
       </div>
     </div>
+    <div id="weekly-prize-section" style="margin-bottom:1.5rem"></div>
     <div class="purch-log-title">📋 История покупок</div>
     <div id="purchase-log"></div>
   </div>
@@ -433,18 +434,19 @@
     { id:'sweets_s', icon:'🍬', label:'Маленький набор сладостей', cost:200 },
     { id:'sweets_m', icon:'🍭', label:'Средний набор сладостей', cost:250 },
     { id:'sweets_l', icon:'🍫', label:'Большой набор сладостей', cost:300 },
+    { id:'avtosim', icon:'🚗', label:' Автосимуляторы 2 часа каждому', cost:2000 },
   ],
 };
 
     const tasks = {
       sveta: {
-        home: [{label:'🪥 Почистил(а) зубы',points:1},{label:'🧹 Помощь по дому',points:1},{label:'🛏️ Чистота в комнате',points:1}],
+        home: [{label:'🪥 Почистил(а) зубы',points:1},{label:'🧹 Помощь по дому',points:1},{label:'🛏️ Чистота в комнате',points:1},{label:'💎 Протереть пыль',points:1},{label:'🗿 Пропылесосить',points:1},{label:'💩 Убрать у кота',points:1}],
         study: [{label:'Оценка 5',points:2},{label:'Оценка 4',points:1},{label:'Оценка 3',points:-1},{label:'Оценка 2',points:-2}],
         sport: [{label:'Старался(ась) на всех секциях за неделю',points:3}],
         books: [{label:'📖 Прочитано 10 страниц книги',points:1}],
       },
       valera: {
-        home: [{label:'🪥 Почистил(а) зубы',points:1},{label:'🧹 Помощь по дому',points:1},{label:'🛏️ Чистота в комнате',points:1}],
+        home: [{label:'🪥 Почистил(а) зубы',points:1},{label:'🧹 Помощь по дому',points:1},{label:'🛏️ Чистота в комнате',points:1},{label:'💎 Протереть пыль',points:1},{label:'🗿 Пропылесосить',points:1},{label:'💩 Убрать у кота',points:1}],
         study: [{label:'Оценка 5',points:2},{label:'Оценка 4',points:1},{label:'Оценка 3',points:-1},{label:'Оценка 2',points:-2}],
         sport: [{label:'Старался(ась) на всех секциях за неделю',points:3}],
         books: [{label:'📖 Прочитано 10 страниц книги',points:1}],
@@ -850,7 +852,43 @@
       const affordable=shopPrizes.individual.filter(p=>p.cost<=balance).sort((a,b)=>b.cost-a.cost);
       if(affordable.length>0){ canBuy.innerHTML='🎁 Можно купить: '+affordable.map(p=>p.icon).join(' '); canBuy.style.color='var(--green)'; }
       else { const cheapest=Math.min(...shopPrizes.individual.map(p=>p.cost)); const left=cheapest-balance; canBuy.innerHTML='До первого приза: '+left+' '+plural(left,'звёздочку','звёздочки','звёздочек'); canBuy.style.color='#9ca3af'; }
+    checkWeeklyPrize();
+    renderWeeklyPrizeProgress();
     }
+
+    function renderWeeklyPrizeProgress() {
+  const el = document.getElementById('weekly-prize-section');
+  if (!el) return;
+
+  const ws = getWeekStart();
+  let weeklyTotal = 0;
+  ['sveta', 'valera'].forEach(kid => {
+    Object.keys(data[kid].days).forEach(date => {
+      if (date >= ws) weeklyTotal += calcDayStars(kid, date);
+    });
+    weeklyTotal += data[kid].familyMomentsCount * 3;
+  });
+
+  const alreadyGot = data.weeklyPrize && data.weeklyPrize[ws];
+  const pct = Math.min(100, Math.round(weeklyTotal / 100 * 100));
+
+  let html = '<div style="background:linear-gradient(135deg,#ede9fe,#c4b5fd);border-radius:1.5rem;padding:1.5rem;text-align:center">';
+  
+  if (alreadyGot) {
+    html += '<div style="font-size:1.3rem;font-weight:bold;color:#4c1d95">🎉 Приз за эту неделю получен!</div>' +
+      '<div style="margin-top:.5rem;color:#6b21b6">' + alreadyGot.icon + ' ' + alreadyGot.prize + ' (' + alreadyGot.total + ' ⭐)</div>';
+  } else {
+    html += '<div style="font-size:1.1rem;font-weight:bold;color:#4c1d95">🎁 Совместная цель недели</div>' +
+      '<div style="margin-top:.5rem;color:#5b21b6">Наберите вдвоём 100 ⭐ за неделю — получите случайный приз!</div>' +
+      '<div style="max-width:400px;margin:1rem auto 0;height:14px;background:#ddd6fe;border-radius:7px;overflow:hidden">' +
+      '<div style="height:100%;background:linear-gradient(90deg,#8b5cf6,#6366f1);border-radius:7px;transition:width .5s;width:' + pct + '%"></div></div>' +
+      '<div style="font-size:.9rem;color:#5b21b6;margin-top:.3rem">' + weeklyTotal + ' / 100 ⭐</div>';
+  }
+  
+  html += '</div>';
+  html += renderWeeklyPrizeLog();
+  el.innerHTML = html;
+}
 
     function calNav(kid,dir){ calState[kid].m+=dir; if(calState[kid].m<0){calState[kid].m=11;calState[kid].y--;} if(calState[kid].m>11){calState[kid].m=0;calState[kid].y++;} renderCalendar(kid); }
     function renderCalendar(kid){
@@ -903,6 +941,7 @@
       document.getElementById('indiv-valera-piggy').textContent=data.valera.piggy;
       renderCommonPrizes(sBal,vBal); renderIndividualPrizes('sveta',sBal); renderIndividualPrizes('valera',vBal);
       renderPurchaseLog(); renderTargetSection();
+      renderWeeklyPrizeProgress();
     }
     function renderCommonPrizes(sBal,vBal){
       const sAvail=Math.max(0,sBal),vAvail=Math.max(0,vBal),combined=sAvail+vAvail;
@@ -1047,6 +1086,89 @@
     renderBadges();
     generateReport();
     startReminder();
+    // Случайные призы за 100 звёзд за неделю (на двоих)
+const WEEKLY_PRIZE_POOL = [
+{ icon: '⭐', label: '+2 звёзды к балансу (на двоих)', bonusStars: 2 },
+{ icon: '⭐', label: '+6 звёзд к балансу (на двоих)', bonusStars: 6 },
+{ icon: '⭐', label: '+8 звёзд к балансу (на двоих)', bonusStars: 8 },
+{ icon: '⭐', label: '+10 звёзд к балансу (на двоих)', bonusStars: 10 },
+{ icon: '⭐', label: '+16 звёзд к балансу (на двоих)', bonusStars: 16 },
+{ icon: '⭐', label: '+20звёзд к балансу (на двоих)', bonusStars: 20 },
+{ icon: '⭐', label: '+4 звёзды к балансу (на двоих)', bonusStars: 4 },
+{ icon: '⭐', label: '+12 звёзд к балансу (на двоих)', bonusStars: 12 },
+];
+
+function checkWeeklyPrize() {
+  const ws = getWeekStart();
+  let weeklyTotal = 0;
+
+  // Считаем звёзды обоих детей за текущую неделю
+  ['sveta', 'valera'].forEach(kid => {
+    Object.keys(data[kid].days).forEach(date => {
+      if (date >= ws) {
+        weeklyTotal += calcDayStars(kid, date);
+      }
+    });
+  });
+
+  // Прибавляем завершённые челленджи и семейные моменты за неделю
+  ['sveta', 'valera'].forEach(kid => {
+    Object.values(data[kid].challengeProgress).forEach(cp => {
+      if (cp.completed) {
+        const cid = data[kid].weeklyChallenges.find(id => 
+          data[kid].challengeProgress[id] === cp
+        );
+        const ch = CHALLENGES.find(c => c.id === cid);
+        if (ch) weeklyTotal += ch.reward;
+      }
+    });
+    weeklyTotal += data[kid].familyMomentsCount * 3;
+  });
+
+  // Проверяем, достигли ли 100 звёзд и не выдавали ли уже приз на этой неделе
+  if (!data.weeklyPrize) data.weeklyPrize = {};
+  const weekKey = ws; // '2026-09-14' — понедельник недели
+
+  if (weeklyTotal >= 100 && !data.weeklyPrize[weekKey]) {
+    // Выбираем случайный приз
+    const prize = WEEKLY_PRIZE_POOL[Math.floor(Math.random() * WEEKLY_PRIZE_POOL.length)];
+    
+    // Записываем, что приз на эту неделю уже выдан
+    data.weeklyPrize[weekKey] = {
+      date: todayStr(),
+      prize: prize.label,
+      icon: prize.icon,
+      total: weeklyTotal
+    };
+    save();
+
+    // Показываем модалку с конфетти
+    document.getElementById('reward-icon').textContent = prize.icon;
+    document.getElementById('reward-name').textContent = 'Совместный приз! 🎉';
+    document.getElementById('reward-text').innerHTML = 
+      'Вы вместе набрали <b>' + weeklyTotal + ' звёзд</b> за неделю!<br>' +
+      'Ваша награда: <b>' + prize.label + '</b>';
+    document.getElementById('reward').classList.add('show');
+    fireConfetti();
+  }
+}
+
+// История совместных призов (для отображения)
+function renderWeeklyPrizeLog() {
+  if (!data.weeklyPrize) return '';
+  const entries = Object.entries(data.weeklyPrize).sort((a, b) => b[0].localeCompare(a[0]));
+  if (entries.length === 0) return '';
+  let html = '<div style="margin-top:1.5rem"><div style="font-size:1.2rem;color:var(--purple);margin-bottom:.8rem;font-weight:bold">🎁 Совместные призы за недели</div>';
+  entries.forEach(([week, info]) => {
+    const d = new Date(week);
+    const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    html += '<div class="purch-log-item" style="border-left-color:#10b981">' +
+      '<div><div class="purch-log-prize">' + info.icon + ' ' + info.prize + '</div>' +
+      '<div class="purch-log-date">Неделя с ' + d.getDate() + ' ' + months[d.getMonth()] + ' · ' + info.total + ' ⭐</div></div></div>';
+  });
+  html += '</div>';
+  return html;
+}
   </script>
 </body>
 </html>
