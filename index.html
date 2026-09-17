@@ -580,12 +580,23 @@ const WEEKLY_PRIZE_POOL = [
     function todayStr(){ return new Date().toISOString().split('T')[0]; }
     function plural(n,one,few,many){ const m10=n%10,m100=n%100; if(m10===1&&m100!==11)return one; if(m10>=2&&m10<=4&&(m100<10||m100>=20))return few; return many; }
 
-    function calcCommonSplit(cost,sBal,vBal){
-  let sPart=Math.floor(cost/2),vPart=cost-sPart;
-  const sAvail=Math.max(0,sBal),vAvail=Math.max(0,vBal);
-  if(sPart>sAvail){sPart=sAvail;vPart=cost-sPart;}
-  if(vPart>vAvail){vPart=vAvail;sPart=cost-vPart;}
-  return{sveta:sPart,valera:vPart};
+   function calcCommonSplit(cost, sBal, vBal) {
+  let sPart = Math.floor(cost / 2);
+  let vPart = cost - sPart;
+
+  const sAvail = Math.max(0, sBal || 0);
+  const vAvail = Math.max(0, vBal || 0);
+
+  if (sPart > sAvail) {
+    sPart = sAvail;
+    vPart = cost - sPart;
+  }
+  if (vPart > vAvail) {
+    vPart = vAvail;
+    sPart = cost - vPart;
+  }
+
+  return { sveta: sPart, valera: vPart };
 }
     
     // ===== ДЕНЬ УДВОЕНИЯ =====
@@ -676,22 +687,39 @@ const WEEKLY_PRIZE_POOL = [
       return total;
     }
    
-    function calcTotalEarned(kid){
-  let total=0;
-  Object.keys(data[kid].days).forEach(d=>{ total+=calcDayStars(kid,d); });
-  Object.values(data[kid].challengeProgress).forEach((cp,idx)=>{
-    if(cp.completed){
-      const cid=data[kid].weeklyChallenges[idx];
-      const ch=CHALLENGES.find(c=>c.id===cid);
-      if(ch) total+=ch.reward;
+    function calcTotalEarned(kid) {
+  if (!data[kid]) return 0;
+  let total = 0;
+
+  // Звёзды за дни
+  Object.keys(data[kid].days || {}).forEach(d => {
+    total += calcDayStars(kid, d) || 0;
+  });
+
+  // Награды за челленджи (исправленная логика)
+  Object.values(data[kid].challengeProgress || {}).forEach((cp, idx) => {
+    if (cp.completed) {
+      const cid = data[kid].weeklyChallenges?.[idx];
+      if (cid) {
+        const ch = CHALLENGES?.find(c => c.id === cid);
+        if (ch) total += ch.reward || 0;
+      }
     }
   });
-  total+=data[kid].familyMomentsCount*3;
-  total+=(data[kid].bonusStarsTotal||0);  // ← вот она, строка бонусов
+
+  // Семейные моменты
+  total += (data[kid].familyMomentsCount || 0) * 3;
+
+  // ГЛАВНОЕ: добавляем накопленные бонусные звёзды
+  total += (data[kid].bonusStarsTotal || 0);
+
   return total;
 }
 
-function calcBalance(kid){ return calcTotalEarned(kid)-data[kid].spent; }
+// 3. Итоговый баланс (заработано минус потрачено)
+function calcBalance(kid) {
+  return calcTotalEarned(kid) - (data[kid]?.spent || 0);
+}
 
     function getActiveSeasonalEvent(){ const now=new Date(); const md=String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0'); return SEASONAL_EVENTS.find(e=>md>=e.start&&md<=e.end); }
     function applySeasonalTheme(){
@@ -1122,8 +1150,9 @@ function checkWeeklyPrize() {
   const ws = getWeekStart();
   let weeklyTotal = 0;
 
-  // Считаем звёзды обоих детей за текущую неделю
+  // Считаем общие звёзды за неделю
   ['sveta', 'valera'].forEach(kid => {
+    if (!data[kid] || !data[kid].days) return;
     Object.keys(data[kid].days).forEach(date => {
       if (date >= ws) {
         weeklyTotal += calcDayStars(kid, date);
@@ -1131,54 +1160,67 @@ function checkWeeklyPrize() {
     });
   });
 
-  // Прибавляем завершённые челленджи и семейные моменты за неделю
+    // Добавляем награды за завершённые челленджи
   ['sveta', 'valera'].forEach(kid => {
-    Object.values(data[kid].challengeProgress).forEach(cp => {
-      if (cp.completed) {
-        const cid = data[kid].weeklyChallenges.find(id => 
-          data[kid].challengeProgress[id] === cp
-        );
-        const ch = CHALLENGES.find(c => c.id === cid);
-        if (ch) weeklyTotal += ch.reward;
+    if (!data[kid]) return;
+    Object.values(data[kid].challengeProgress || {}).forEach((cp, idx) => {
+      if (!cp || !cp.completed) return;
+      const cid = data[kid].weeklyChallenges?.[idx];
+      if (cid) {
+        const ch = CHALLENGES?.find(c => c.id === cid);
+        if (ch) weeklyTotal += ch.reward || 0;
       }
     });
-    weeklyTotal += data[kid].familyMomentsCount * 3;
+    weeklyTotal += (data[kid].familyMomentsCount || 0) * 3;
   });
 
-  // Проверяем, достигли ли 100 звёзд и не выдавали ли уже приз на этой неделе
   if (!data.weeklyPrize) data.weeklyPrize = {};
   const weekKey = ws;
 
+  // Если набрали 100 и приз ещё не брали
   if (weeklyTotal >= 100 && !data.weeklyPrize[weekKey]) {
-    // Выбираем случайный приз
     const prize = WEEKLY_PRIZE_POOL[Math.floor(Math.random() * WEEKLY_PRIZE_POOL.length)];
 
-    // Начисляем бонусные звёзды обоим детям поровну
+    // Начисляем бонус в отдельное поле
     if (prize && prize.bonusStars && prize.bonusStars > 0) {
-  const sharePerKid = Math.floor(prize.bonusStars / 2);
+      const sharePerKid = Math.floor(prize.bonusStars / 2);
+      data['sveta'].bonusStarsTotal = (data['sveta'].bonusStarsTotal || 0) + sharePerKid;
+      data['valera'].bonusStarsTotal = (data['valera'].bonusStarsTotal || 0) + sharePerKid;
+    }
 
-  data['sveta'].bonusStarsTotal = (data['sveta'].bonusStarsTotal || 0) + sharePerKid;
-  data['valera'].bonusStarsTotal = (data['valera'].bonusStarsTotal || 0) + sharePerKid;
-}
-
-    // Записываем, что приз на эту неделю уже выдан
+    // Сохраняем факт выдачи приза
     data.weeklyPrize[weekKey] = {
       date: todayStr(),
-      prize: prize.label,
-      icon: prize.icon,
+      prize: prize?.label || 'Приз недели',
+      icon: prize?.icon || '🎁',
       total: weeklyTotal,
-      bonusStars: prize.bonusStars || 0
+      bonusStars: prize?.bonusStars || 0,
     };
+
     save();
 
-    // Показываем модалку с конфетти
-    document.getElementById('reward-icon').textContent = prize.icon;
-    document.getElementById('reward-name').textContent = 'Совместный приз! 🎉';
-    document.getElementById('reward-text').innerHTML = 
-      'Вы вместе набрали <b>' + weeklyTotal + ' звёзд</b> за неделю!<br>' +
-      'Ваша награда: <b>' + prize.label + '</b>';
-    document.getElementById('reward').classList.add('show');
-    fireConfetti();
+      // Показываем окно награды
+    const rewardIconEl = document.getElementById('reward-icon');
+    const rewardNameEl = document.getElementById('reward-name');
+    const rewardTextEl = document.getElementById('reward-text');
+    const rewardEl = document.getElementById('reward');
+
+    if (rewardIconEl) rewardIconEl.textContent = prize?.icon || '🎁';
+    if (rewardNameEl) rewardNameEl.textContent = 'Совместный приз! 🎉';
+
+    let bonusText = '';
+    if (prize?.bonusStars && prize.bonusStars > 0) {
+      bonusText = `<br><b style="color:#10b981">+${prize.bonusStars} ⭐ на двоих!</b>`;
+    }
+
+    if (rewardTextEl) {
+      rewardTextEl.innerHTML =
+        `Вы вместе набрали <b>${weeklyTotal} звёзд</b> за неделю!<br>` +
+        `Ваша награда: <b>${prize?.label || 'Приз'}</b>${bonusText}`;
+    }
+    if (rewardEl) rewardEl.classList.add('show');
+
+    if (typeof fireConfetti === 'function') fireConfetti();
   }
 }
 
