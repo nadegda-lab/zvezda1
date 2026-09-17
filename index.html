@@ -529,7 +529,19 @@
        tasks:[{id:'find',label:'🌷 Найти признак весны',points:2},{id:'birds',label:'🐦 Забота о птицах',points:1},{id:'plant',label:'🌱 Посадить или полить растение',points:1},{id:'sun',label:'☀️ 30 минут на свежем воздухе',points:1}],
        bonusDays:6},
     ];
-
+ 
+    // Случайные призы за 100 звёзд за неделю (на двоих)
+const WEEKLY_PRIZE_POOL = [
+{ icon: '⭐', label: '+2 звёзды к балансу (на двоих)', bonusStars: 2 },
+{ icon: '⭐', label: '+6 звёзд к балансу (на двоих)', bonusStars: 6 },
+{ icon: '⭐', label: '+8 звёзд к балансу (на двоих)', bonusStars: 8 },
+{ icon: '⭐', label: '+10 звёзд к балансу (на двоих)', bonusStars: 10 },
+{ icon: '⭐', label: '+16 звёзд к балансу (на двоих)', bonusStars: 16 },
+{ icon: '⭐', label: '+20звёзд к балансу (на двоих)', bonusStars: 20 },
+{ icon: '⭐', label: '+4 звёзды к балансу (на двоих)', bonusStars: 4 },
+{ icon: '⭐', label: '+12 звёзд к балансу (на двоих)', bonusStars: 12 },
+];
+    
     let data = JSON.parse(localStorage.getItem('kidsStarsV7') || '{}');
     ['sveta','valera'].forEach(kid => {
       if(!data[kid]) data[kid] = {};
@@ -568,6 +580,14 @@
     function todayStr(){ return new Date().toISOString().split('T')[0]; }
     function plural(n,one,few,many){ const m10=n%10,m100=n%100; if(m10===1&&m100!==11)return one; if(m10>=2&&m10<=4&&(m100<10||m100>=20))return few; return many; }
 
+    function calcCommonSplit(cost,sBal,vBal){
+  let sPart=Math.floor(cost/2),vPart=cost-sPart;
+  const sAvail=Math.max(0,sBal),vAvail=Math.max(0,vBal);
+  if(sPart>sAvail){sPart=sAvail;vPart=cost-sPart;}
+  if(vPart>vAvail){vPart=vAvail;sPart=cost-vPart;}
+  return{sveta:sPart,valera:vPart};
+}
+    
     // ===== ДЕНЬ УДВОЕНИЯ =====
     function generateDoubleDay(){
       const today=new Date();
@@ -1088,17 +1108,6 @@ function calcBalance(kid){ return calcTotalEarned(kid)-data[kid].spent; }
     renderBadges();
     generateReport();
     startReminder();
-    // Случайные призы за 100 звёзд за неделю (на двоих)
-const WEEKLY_PRIZE_POOL = [
-{ icon: '⭐', label: '+2 звёзды к балансу (на двоих)', bonusStars: 2 },
-{ icon: '⭐', label: '+6 звёзд к балансу (на двоих)', bonusStars: 6 },
-{ icon: '⭐', label: '+8 звёзд к балансу (на двоих)', bonusStars: 8 },
-{ icon: '⭐', label: '+10 звёзд к балансу (на двоих)', bonusStars: 10 },
-{ icon: '⭐', label: '+16 звёзд к балансу (на двоих)', bonusStars: 16 },
-{ icon: '⭐', label: '+20звёзд к балансу (на двоих)', bonusStars: 20 },
-{ icon: '⭐', label: '+4 звёзды к балансу (на двоих)', bonusStars: 4 },
-{ icon: '⭐', label: '+12 звёзд к балансу (на двоих)', bonusStars: 12 },
-];
 
     function updateBalance(kid, amount) {
   if (!data[kid]) {
