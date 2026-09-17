@@ -1132,6 +1132,11 @@ function checkWeeklyPrize() {
   if (weeklyTotal >= 100 && !data.weeklyPrize[weekKey]) {
     // Выбираем случайный приз
     const prize = WEEKLY_PRIZE_POOL[Math.floor(Math.random() * WEEKLY_PRIZE_POOL.length)];
+
+     if (prize.bonusStars && prize.bonusStars > 0) {
+      const sharePerKid = Math.floor(prize.bonusStars / 2);
+      updateBalance('sveta', sharePerKid);
+      updateBalance('valera', sharePerKid);
     
     // Записываем, что приз на эту неделю уже выдан
     data.weeklyPrize[weekKey] = {
