@@ -1127,23 +1127,26 @@ function checkWeeklyPrize() {
 
   // Проверяем, достигли ли 100 звёзд и не выдавали ли уже приз на этой неделе
   if (!data.weeklyPrize) data.weeklyPrize = {};
-  const weekKey = ws; // '2026-09-14' — понедельник недели
+  const weekKey = ws;
 
   if (weeklyTotal >= 100 && !data.weeklyPrize[weekKey]) {
     // Выбираем случайный приз
     const prize = WEEKLY_PRIZE_POOL[Math.floor(Math.random() * WEEKLY_PRIZE_POOL.length)];
 
-     if (prize.bonusStars && prize.bonusStars > 0) {
+    // Начисляем бонусные звёзды обоим детям поровну
+    if (prize.bonusStars && prize.bonusStars > 0) {
       const sharePerKid = Math.floor(prize.bonusStars / 2);
       updateBalance('sveta', sharePerKid);
       updateBalance('valera', sharePerKid);
-    
+    }
+
     // Записываем, что приз на эту неделю уже выдан
     data.weeklyPrize[weekKey] = {
       date: todayStr(),
       prize: prize.label,
       icon: prize.icon,
-      total: weeklyTotal
+      total: weeklyTotal,
+      bonusStars: prize.bonusStars || 0
     };
     save();
 
