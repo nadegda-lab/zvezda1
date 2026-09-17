@@ -904,40 +904,53 @@ function calcBalance(kid) {
     renderWeeklyPrizeProgress();
     }
 
-    function renderWeeklyPrizeProgress() {
+function renderWeeklyPrizeProgress() {
   const el = document.getElementById('weekly-prize-section');
   if (!el) return;
 
   const ws = getWeekStart();
   let weeklyTotal = 0;
+
   ['sveta', 'valera'].forEach(kid => {
-    Object.keys(data[kid].days).forEach(date => {
-      if (date >= ws) weeklyTotal += calcDayStars(kid, date);
+    // Дни
+    Object.keys(data[kid].days || {}).forEach(date => {
+      if (date >= ws) weeklyTotal += calcDayStars(kid, date) || 0;
     });
-    weeklyTotal += data[kid].familyMomentsCount * 3;
+
+    // Челленджи (теперь точно считаются)
+    Object.entries(data[kid].challengeProgress || {}).forEach(([cid, cp]) => {
+      if (cp && cp.completed) {
+        const ch = CHALLENGES?.find(c => c.id === cid);
+        if (ch) weeklyTotal += ch.reward || 0;
+      }
+    });
+
+    // Семейные моменты
+    weeklyTotal += (data[kid].familyMomentsCount || 0) * 3;
   });
 
   const alreadyGot = data.weeklyPrize && data.weeklyPrize[ws];
-  const pct = Math.min(100, Math.round(weeklyTotal / 100 * 100));
+  // Процент считаем от 150
+  const pct = Math.min(100, Math.round(weeklyTotal / 150 * 100));
 
   let html = '<div style="background:linear-gradient(135deg,#ede9fe,#c4b5fd);border-radius:1.5rem;padding:1.5rem;text-align:center">';
-  
+
   if (alreadyGot) {
     html += '<div style="font-size:1.3rem;font-weight:bold;color:#4c1d95">🎉 Приз за эту неделю получен!</div>' +
       '<div style="margin-top:.5rem;color:#6b21b6">' + alreadyGot.icon + ' ' + alreadyGot.prize + ' (' + alreadyGot.total + ' ⭐)</div>';
   } else {
     html += '<div style="font-size:1.1rem;font-weight:bold;color:#4c1d95">🎁 Совместная цель недели</div>' +
-      '<div style="margin-top:.5rem;color:#5b21b6">Наберите вдвоём 100 ⭐ за неделю — получите случайный приз!</div>' +
+      '<div style="margin-top:.5rem;color:#5b21b6">Наберите вдвоём 150 ⭐ за неделю — получите случайный приз!</div>' +
       '<div style="max-width:400px;margin:1rem auto 0;height:14px;background:#ddd6fe;border-radius:7px;overflow:hidden">' +
       '<div style="height:100%;background:linear-gradient(90deg,#8b5cf6,#6366f1);border-radius:7px;transition:width .5s;width:' + pct + '%"></div></div>' +
-      '<div style="font-size:.9rem;color:#5b21b6;margin-top:.3rem">' + weeklyTotal + ' / 100 ⭐</div>';
+      '<div style="font-size:.9rem;color:#5b21b6;margin-top:.3rem">' + weeklyTotal + ' / 150 ⭐</div>';
   }
-  
-  html += '</div>';
-  html += renderWeeklyPrizeLog();
+
+  html += '</div>';                 // Закрываем основной блок
+  html += renderWeeklyPrizeLog();  // Твой лог истории призов — оставляем!
+
   el.innerHTML = html;
 }
-
     function calNav(kid,dir){ calState[kid].m+=dir; if(calState[kid].m<0){calState[kid].m=11;calState[kid].y--;} if(calState[kid].m>11){calState[kid].m=0;calState[kid].y++;} renderCalendar(kid); }
     function renderCalendar(kid){
       const {y,m}=calState[kid]; const firstDay=new Date(y,m,1); const daysInMonth=new Date(y,m+1,0).getDate();
@@ -1177,8 +1190,8 @@ function checkWeeklyPrize() {
   if (!data.weeklyPrize) data.weeklyPrize = {};
   const weekKey = ws;
 
-  // Если набрали 100 и приз ещё не брали
-  if (weeklyTotal >= 100 && !data.weeklyPrize[weekKey]) {
+  // Если набрали 150 и приз ещё не брали
+  if (weeklyTotal >= 150 && !data.weeklyPrize[weekKey]) {
     const prize = WEEKLY_PRIZE_POOL[Math.floor(Math.random() * WEEKLY_PRIZE_POOL.length)];
 
     // Начисляем бонус в отдельное поле
