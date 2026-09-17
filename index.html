@@ -655,21 +655,23 @@
       if(isDoubleDay(dateStr)) total*=2;
       return total;
     }
+   
     function calcTotalEarned(kid){
-      let total=0;
-      Object.keys(data[kid].days).forEach(d=>{ total+=calcDayStars(kid,d); });
-      Object.values(data[kid].challengeProgress).forEach((cp,idx)=>{ if(cp.completed){ const cid=data[kid].weeklyChallenges[idx]; const ch=CHALLENGES.find(c=>c.id===cid); if(ch) total+=ch.reward; } });
-      total+=data[kid].familyMomentsCount*3;
-      return total;
+  let total=0;
+  Object.keys(data[kid].days).forEach(d=>{ total+=calcDayStars(kid,d); });
+  Object.values(data[kid].challengeProgress).forEach((cp,idx)=>{
+    if(cp.completed){
+      const cid=data[kid].weeklyChallenges[idx];
+      const ch=CHALLENGES.find(c=>c.id===cid);
+      if(ch) total+=ch.reward;
     }
-    function calcBalance(kid){ return calcTotalEarned(kid)-data[kid].spent; }
-    function calcCommonSplit(cost,sBal,vBal){
-      let sPart=Math.floor(cost/2),vPart=cost-sPart;
-      const sAvail=Math.max(0,sBal),vAvail=Math.max(0,vBal);
-      if(sPart>sAvail){sPart=sAvail;vPart=cost-sPart;}
-      if(vPart>vAvail){vPart=vAvail;sPart=cost-vPart;}
-      return{sveta:sPart,valera:vPart};
-    }
+  });
+  total+=data[kid].familyMomentsCount*3;
+  total+=(data[kid].bonusStarsTotal||0);  // ← вот она, строка бонусов
+  return total;
+}
+
+function calcBalance(kid){ return calcTotalEarned(kid)-data[kid].spent; }
 
     function getActiveSeasonalEvent(){ const now=new Date(); const md=String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0'); return SEASONAL_EVENTS.find(e=>md>=e.start&&md<=e.end); }
     function applySeasonalTheme(){
@@ -1143,11 +1145,12 @@ function checkWeeklyPrize() {
     const prize = WEEKLY_PRIZE_POOL[Math.floor(Math.random() * WEEKLY_PRIZE_POOL.length)];
 
     // Начисляем бонусные звёзды обоим детям поровну
-    if (prize.bonusStars && prize.bonusStars > 0) {
-      const sharePerKid = Math.floor(prize.bonusStars / 2);
-      updateBalance('sveta', sharePerKid);
-      updateBalance('valera', sharePerKid);
-    }
+    if (prize && prize.bonusStars && prize.bonusStars > 0) {
+  const sharePerKid = Math.floor(prize.bonusStars / 2);
+
+  data['sveta'].bonusStarsTotal = (data['sveta'].bonusStarsTotal || 0) + sharePerKid;
+  data['valera'].bonusStarsTotal = (data['valera'].bonusStarsTotal || 0) + sharePerKid;
+}
 
     // Записываем, что приз на эту неделю уже выдан
     data.weeklyPrize[weekKey] = {
