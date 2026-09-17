@@ -1098,6 +1098,15 @@ const WEEKLY_PRIZE_POOL = [
 { icon: '⭐', label: '+12 звёзд к балансу (на двоих)', bonusStars: 12 },
 ];
 
+    function updateBalance(kid, amount) {
+  if (!data[kid]) {
+    console.error('Ребёнок не найден:', kid);
+    return;
+  }
+  data[kid].balance = (data[kid].balance || 0) + amount;
+  console.log(`Баланс ${kid} изменён на ${amount}. Новый баланс:`, data[kid].balance);
+}
+    
 function checkWeeklyPrize() {
   const ws = getWeekStart();
   let weeklyTotal = 0;
