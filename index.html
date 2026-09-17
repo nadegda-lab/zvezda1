@@ -698,15 +698,12 @@ const WEEKLY_PRIZE_POOL = [
   });
 
   // Награды за челленджи (исправленная логика)
-  Object.values(data[kid].challengeProgress || {}).forEach((cp, idx) => {
-    if (cp.completed) {
-      const cid = data[kid].weeklyChallenges?.[idx];
-      if (cid) {
-        const ch = CHALLENGES?.find(c => c.id === cid);
-        if (ch) total += ch.reward || 0;
-      }
-    }
-  });
+Object.entries(data[kid].challengeProgress || {}).forEach(([cid, cp]) => {
+  if (cp && cp.completed) {
+    const ch = CHALLENGES?.find(c => c.id === cid);
+    if (ch) total += ch.reward || 0;
+  }
+});
 
   // Семейные моменты
   total += (data[kid].familyMomentsCount || 0) * 3;
@@ -1164,14 +1161,16 @@ function checkWeeklyPrize() {
     // Добавляем награды за завершённые челленджи
   ['sveta', 'valera'].forEach(kid => {
     if (!data[kid]) return;
-    Object.values(data[kid].challengeProgress || {}).forEach((cp, idx) => {
-      if (!cp || !cp.completed) return;
-      const cid = data[kid].weeklyChallenges?.[idx];
-      if (cid) {
-        const ch = CHALLENGES?.find(c => c.id === cid);
-        if (ch) weeklyTotal += ch.reward || 0;
-      }
-    });
+   Object.entries(data[kid].challengeProgress || {}).forEach(([cid, cp]) => {
+  if (!cp || !cp.completed) return;
+  const ch = CHALLENGES?.find(c => c.id === cid);
+  if (ch) {
+    weeklyTotal += ch.reward || 0;
+    console.log('Челлендж засчитан:', cid, '+', ch.reward, 'звёзд');
+  } else {
+    console.warn('Челлендж не найден в CHALLENGES:', cid);
+  }
+});
     weeklyTotal += (data[kid].familyMomentsCount || 0) * 3;
   });
 
