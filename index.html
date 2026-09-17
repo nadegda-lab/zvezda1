@@ -1198,6 +1198,7 @@ function checkWeeklyPrize() {
     };
 
     save();
+    renderBalances();
 
       // Показываем окно награды
     const rewardIconEl = document.getElementById('reward-icon');
@@ -1239,6 +1240,13 @@ function renderWeeklyPrizeLog() {
   });
   html += '</div>';
   return html;
+}
+    function renderBalances() {
+  const svetaEl = document.getElementById('sveta-balance');
+  if (svetaEl) svetaEl.textContent = calcBalance('sveta');
+
+  const valeraEl = document.getElementById('valera-balance');
+  if (valeraEl) valeraEl.textContent = calcBalance('valera');
 }
   </script>
 </body>
